@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Hospitality Journal — Dhaval Joshi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A96E;--gold-light:#E8D5A3;--gold-dark:#9A7340;
+  --black:#0A0A0A;--off-black:#111;--charcoal:#1A1A1A;
+  --white:#FFFFFF;--off-white:#FAF8F4;--cream:#F5F0E8;
+  --muted:#888;--border:rgba(255,255,255,0.12);
+  --border-dark:rgba(0,0,0,0.1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.35s}
+
+/* ── NAVBAR ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 3rem;height:72px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s,backdrop-filter 0.4s,border-color 0.4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-color:var(--border)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--white);text-decoration:none;letter-spacing:0.04em}
+.nav-logo em{color:var(--gold);font-style:italic}
+.nav-center{display:flex;gap:2.5rem;list-style:none}
+.nav-center a{font-size:0.72rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s}
+.nav-center a:hover{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+#lockIcon{font-size:0.85rem;cursor:pointer;color:rgba(255,255,255,0.5);padding:0.4rem 0.7rem;border:1px solid rgba(255,255,255,0.2);border-radius:2px;transition:all 0.2s;user-select:none}
+#lockIcon:hover{color:var(--gold);border-color:var(--gold)}
+#adminBtn{display:none;background:var(--gold);color:var(--black);padding:0.5rem 1.2rem;border-radius:2px;cursor:pointer;border:none;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+#adminBtn:hover{background:var(--gold-light)}
+#logoutBtn{display:none;background:none;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.15);padding:0.4rem 0.9rem;border-radius:2px;cursor:pointer;font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+#logoutBtn:hover{color:var(--white);border-color:rgba(255,255,255,0.4)}
+
+/* ── HERO ── */
+.hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1800&q=85');background-size:cover;background-position:center;transform:scale(1.05);transition:transform 8s ease;animation:heroZoom 8s ease forwards}
+@keyframes heroZoom{from{transform:scale(1.05)}to{transform:scale(1)}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.3) 60%,rgba(0,0,0,0.1) 100%)}
+.hero-overlay2{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5) 0%,transparent 50%)}
+.hero-content{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 3rem;width:100%}
+.hero-eyebrow{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:fadeUp 1s ease 0.3s forwards}
+.hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:1.05;color:var(--white);margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s ease 0.5s forwards}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:rgba(255,255,255,0.8);max-width:480px;line-height:1.7;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s ease 0.7s forwards}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 1s ease 0.9s forwards}
+.btn-hero-primary{background:var(--gold);color:var(--black);padding:0.85rem 2rem;font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block;transition:background 0.2s,transform 0.2s}
+.btn-hero-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-hero-outline{background:transparent;color:var(--white);padding:0.85rem 2rem;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.5);cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block;transition:all 0.2s}
+.btn-hero-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.5);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0;animation:fadeUp 1s ease 1.2s forwards}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.8)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── STATS BAR ── */
+.stats-bar{background:var(--charcoal);padding:2rem 3rem}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;border-left:1px solid rgba(201,169,110,0.3)}
+.stat-item{padding-left:2rem;border-left:1px solid rgba(201,169,110,0.15)}
+.stat-item:first-child{border:none;padding-left:0}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+.stat-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.3rem}
+
+/* ── SECTION LABELS ── */
+.section-label{display:flex;align-items:center;gap:1rem;margin-bottom:3rem}
+.section-label span{font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border-dark),transparent)}
+
+/* ── FEATURED ── */
+.featured-section{padding:6rem 3rem;max-width:1100px;margin:0 auto}
+.featured-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2px;border-radius:4px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.15)}
+.featured-main{position:relative;min-height:540px;cursor:pointer;overflow:hidden}
+.featured-main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease}
+.featured-main:hover img{transform:scale(1.05)}
+.featured-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.2) 60%,transparent 100%)}
+.featured-main-body{position:absolute;bottom:0;left:0;right:0;padding:2.5rem}
+.featured-badge{display:inline-block;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;padding:0.3rem 0.8rem;border-radius:1px;margin-bottom:1rem}
+.featured-main-body h2{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--white);line-height:1.25;margin-bottom:0.75rem}
+.featured-main-body p{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem}
+.read-link{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);font-weight:500;display:inline-flex;align-items:center;gap:0.5rem;transition:gap 0.2s}
+.read-link:hover{gap:0.8rem}
+
+.featured-side{display:flex;flex-direction:column;gap:2px}
+.side-card{position:relative;flex:1;min-height:180px;cursor:pointer;overflow:hidden}
+.side-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
+.side-card:hover img{transform:scale(1.08)}
+.side-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 100%)}
+.side-card-body{position:absolute;bottom:0;padding:1.25rem}
+.side-tag{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:0.4rem}
+.side-card-body h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--white);line-height:1.35}
+
+/* ── PULLQUOTE ── */
+.pullquote-section{background:var(--charcoal);padding:5rem 3rem;position:relative;overflow:hidden}
+.pullquote-section::before{content:'\201C';position:absolute;top:-2rem;left:3rem;font-family:'Playfair Display',serif;font-size:20rem;color:rgba(201,169,110,0.06);line-height:1;pointer-events:none}
+.pullquote-inner{max-width:800px;margin:0 auto;text-align:center}
+.pullquote-inner blockquote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3vw,2.2rem);font-style:italic;font-weight:300;color:var(--white);line-height:1.5;margin-bottom:1.5rem}
+.pullquote-inner cite{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
+
+/* ── ALL POSTS ── */
+.posts-section{padding:6rem 3rem;max-width:1100px;margin:0 auto}
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.post-card{background:var(--white);border-radius:4px;overflow:hidden;cursor:pointer;transition:transform 0.3s ease,box-shadow 0.3s ease;box-shadow:0 2px 20px rgba(0,0,0,0.06)}
+.post-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.12)}
+.post-card-img{position:relative;height:200px;overflow:hidden}
+.post-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
+.post-card:hover .post-card-img img{transform:scale(1.08)}
+.post-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5),transparent)}
+.post-card-tag-img{position:absolute;top:1rem;left:1rem;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;padding:0.25rem 0.65rem;border-radius:1px}
+.post-card-body{padding:1.5rem}
+.post-card h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.4;color:var(--charcoal);margin-bottom:0.6rem}
+.post-card p{font-size:0.82rem;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1rem}
+.post-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:0.75rem;border-top:1px solid rgba(0,0,0,0.07);font-size:0.68rem;color:var(--muted);letter-spacing:0.04em}
+.delete-btn{display:none;background:none;border:none;color:#ddd;cursor:pointer;font-size:0.72rem;padding:0.2rem 0.45rem;border-radius:2px;transition:color 0.2s,background 0.2s}
+.delete-btn:hover{color:#e24b4a;background:#fff0f0}
+.admin-mode .delete-btn{display:inline-block}
+
+/* empty state */
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-box{display:inline-block;border:2px dashed rgba(0,0,0,0.1);border-radius:8px;padding:3rem 4rem;max-width:480px}
+.empty-box p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--muted);margin-bottom:0}
+
+/* ── ABOUT ── */
+.about-section{position:relative;overflow:hidden}
+.about-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1400&q=80');background-size:cover;background-position:center;background-attachment:fixed}
+.about-overlay{position:absolute;inset:0;background:rgba(10,10,10,0.88)}
+.about-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:6rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+.about-avatar{width:140px;height:140px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--black);border:4px solid rgba(201,169,110,0.3)}
+.about-creds{display:flex;flex-direction:column;gap:0.6rem;width:100%}
+.cred{display:flex;align-items:center;gap:0.75rem;font-size:0.78rem;color:rgba(255,255,255,0.6)}
+.cred::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.about-text h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:0.5rem}
+.about-text h2 em{color:var(--gold);font-style:italic}
+.about-subtitle{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.5rem}
+.about-text p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.8;margin-bottom:1rem}
+
+/* ── FOOTER ── */
+footer{background:var(--black);padding:3rem;text-align:center;border-top:1px solid rgba(201,169,110,0.15)}
+.footer-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:0.5rem}
+.footer-logo em{color:var(--gold);font-style:italic}
+.footer-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:rgba(255,255,255,0.35);margin-bottom:1.5rem}
+.footer-divider{width:60px;height:1px;background:rgba(201,169,110,0.3);margin:1.5rem auto}
+footer p{font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em}
+
+/* ── OVERLAYS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;backdrop-filter:blur(6px)}
+.overlay.active{display:flex}
+
+/* login */
+.login-panel{background:var(--white);border-radius:4px;width:100%;max-width:380px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
+.login-header{background:var(--charcoal);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.login-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white)}
+.panel-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.4rem;cursor:pointer;line-height:1;padding:0;transition:color 0.2s}
+.panel-close:hover{color:var(--white)}
+.login-body{padding:2rem}
+.login-body p{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.field{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem}
+.field label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.field input,.field textarea,.field select{background:#f8f7f4;border:1px solid rgba(0,0,0,0.12);border-radius:2px;padding:0.7rem 1rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--charcoal);outline:none;transition:border-color 0.2s;width:100%}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
+.field textarea{min-height:150px;resize:vertical}
+.error-msg{font-size:0.75rem;color:#e24b4a;margin-top:0.25rem;display:none}
+.field.error input{border-color:#e24b4a}
+.btn-gold{width:100%;background:var(--gold);color:var(--black);border:none;padding:0.8rem;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:0.5rem}
+.btn-gold:hover{background:var(--gold-light)}
+
+/* write panel */
+.write-panel{background:var(--white);border-radius:4px;width:100%;max-width:620px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
+.panel-header{background:var(--charcoal);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.panel-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white)}
+.panel-body{padding:2rem}
+.panel-body .hint{font-size:0.85rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.65;border-left:3px solid var(--gold);padding-left:1rem;font-style:italic}
+.char-count{font-size:0.68rem;color:var(--muted);text-align:right;margin-top:3px}
+.panel-actions{display:flex;gap:0.75rem;margin-top:1.5rem}
+.btn-cancel{flex:1;background:#f5f3ef;color:var(--charcoal);border:1px solid rgba(0,0,0,0.1);padding:0.75rem;font-size:0.75rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+.btn-cancel:hover{background:#ede9e0}
+.btn-publish{flex:2;background:var(--charcoal);color:var(--white);border:none;padding:0.75rem;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+.btn-publish:hover{background:var(--gold-dark)}
+
+/* read panel */
+.read-panel{background:var(--white);border-radius:4px;width:100%;max-width:680px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
+.read-img{height:320px;overflow:hidden;position:relative}
+.read-img img{width:100%;height:100%;object-fit:cover}
+.read-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
+.read-img-meta{position:absolute;bottom:0;padding:1.75rem}
+.read-img-tag{display:inline-block;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;padding:0.25rem 0.7rem;border-radius:1px;margin-bottom:0.6rem}
+.read-img-meta h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);line-height:1.3}
+.read-body{padding:2.25rem 2rem}
+.read-meta{font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.read-meta-dot{color:var(--gold)}
+.story-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--charcoal);line-height:2;white-space:pre-wrap;word-break:break-word}
+
+@keyframes panelIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--white);padding:0.9rem 1.75rem;border-radius:4px;border-left:3px solid var(--gold);font-size:0.82rem;z-index:500;opacity:0;transition:transform 0.3s ease,opacity 0.3s ease;white-space:nowrap;pointer-events:none;letter-spacing:0.02em}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* photo arrays for cards */
+.bg-1{background:#2C3A2E}
+.bg-2{background:#7A5230}
+.bg-3{background:#1A2535}
+.bg-4{background:#5C2D3A}
+.bg-5{background:#1A3A38}
+.bg-6{background:#3A2850}
+
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  .nav-center{display:none}
+  .hero-content{padding:0 1.5rem}
+  .hero h1{font-size:2.5rem}
+  .featured-grid{grid-template-columns:1fr}
+  .posts-grid{grid-template-columns:1fr}
+  .about-inner{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .featured-section,.posts-section{padding:4rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#"><em>The</em> Hospitality Journal</a>
+  <ul class="nav-center">
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button id="adminBtn" onclick="openWrite()">+ New Post</button>
+    <button id="logoutBtn" onclick="logout()">Log out</button>
+    <span id="lockIcon" onclick="openLogin()" title="Admin access">🔒</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Luxury Hospitality · Field Notes</div>
+    <h1>Where <em>Service</em><br>Becomes an<br>Art Form</h1>
+    <p class="hero-desc">Real stories from five-star hotels, quiet turndown rituals, and the human moments that make hospitality extraordinary.</p>
+    <div class="hero-btns">
+      <a href="#stories" class="btn-hero-primary">Read the Stories</a>
+      <a href="#about" class="btn-hero-outline">About Dhaval</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner reveal">
+    <div class="stat-item">
+      <div class="stat-num" id="statPosts">0</div>
+      <div class="stat-label">Stories Published</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5★</div>
+      <div class="stat-label">Forbes Standard</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Years in Luxury Hotels</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">AU & IN</div>
+      <div class="stat-label">Markets Served</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<section class="featured-section" id="featured">
+  <div class="section-label reveal">
+    <span>Featured Stories</span>
+  </div>
+  <div id="featuredArea"></div>
+</section>
+
+<!-- PULLQUOTE -->
+<div class="pullquote-section">
+  <div class="pullquote-inner reveal">
+    <blockquote>"Luxury is not about the thread count or the marble lobby. It is about the intention behind every detail — making someone feel, for a moment, that they are the only person in the world."</blockquote>
+    <cite>— Dhaval Joshi · The Hospitality Journal</cite>
+  </div>
+</div>
+
+<!-- ALL POSTS -->
+<section class="posts-section" id="stories">
+  <div class="section-label reveal">
+    <span>All Stories</span>
+  </div>
+  <div id="postsGrid" class="posts-grid"></div>
+  <div id="emptyState" class="empty-state" style="display:none">
+    <div class="empty-box">
+      <p>No stories yet — the first entry is coming soon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-bg"></div>
+  <div class="about-overlay"></div>
+  <div class="about-inner">
+    <div class="about-avatar-wrap reveal">
+      <div class="about-avatar">DJ</div>
+      <div class="about-creds">
+        <div class="cred">The Langham — Sleep Matters Project</div>
+        <div class="cred">St. Regis-Marriott — Luxury Internship</div>
+        <div class="cred">Meriton Suites, Broadbeach</div>
+        <div class="cred">Griffith University — Sustainable Officer</div>
+        <div class="cred">Griffith University — Masters, Tourism & Hospitality</div>
+      </div>
+    </div>
+    <div class="about-text reveal reveal-delay-2">
+      <h2>Dhaval <em>Joshi</em></h2>
+      <div class="about-subtitle">Gold Coast, Queensland, Australia</div>
+      <p>I arrived in Australia in 2024 to pursue a Master of International Tourism & Hospitality Management at Griffith University — and found myself working the floors of some of the Gold Coast's finest hotels along the way.</p>
+      <p>This journal is where I document what the hospitality industry looks like from the inside: the quiet craft of a perfectly turned-down room, the guest moments that stay with you, and the standards that separate good service from truly great service.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><em>The</em> Hospitality Journal</div>
+  <div class="footer-tagline">Stories from the front lines of five-star service</div>
+  <div class="footer-divider"></div>
+  <p>© 2025 Dhaval Joshi · Gold Coast, Queensland · All experiences are personal reflections.</p>
+</footer>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="loginOverlay" onclick="overlayClick(event,'loginOverlay')">
+  <div class="login-panel">
+    <div class="login-header">
+      <h3>Admin Access</h3>
+      <button class="panel-close" onclick="closeLogin()">✕</button>
+    </div>
+    <div class="login-body">
+      <p>This area is for Dhaval only. Enter your password to write and manage stories.</p>
+      <div class="field" id="pwField">
+        <label>Password</label>
+        <input type="password" id="pwInput" placeholder="Enter your password…" onkeydown="if(event.key==='Enter')checkLogin()"/>
+        <div class="error-msg" id="pwError">Incorrect password. Please try again.</div>
+      </div>
+      <button class="btn-gold" onclick="checkLogin()">Enter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE OVERLAY -->
+<div class="overlay" id="writeOverlay" onclick="overlayClick(event,'writeOverlay')">
+  <div class="write-panel">
+    <div class="panel-header">
+      <h3>Write a New Story</h3>
+      <button class="panel-close" onclick="closeWrite()">✕</button>
+    </div>
+    <div class="panel-body">
+      <p class="hint">Write naturally — like you're telling a friend what happened at work. No formatting needed, just your experience in your own words.</p>
+      <div class="field">
+        <label>Post Title *</label>
+        <input type="text" id="fTitle" placeholder="e.g. The guest who changed how I see service…" maxlength="120" oninput="updateChar('fTitle','titleCount',120)"/>
+        <div class="char-count"><span id="titleCount">0</span>/120</div>
+      </div>
+      <div class="field">
+        <label>Category *</label>
+        <select id="fCat">
+          <option value="">Choose a category…</option>
+          <option>Guest Experience</option>
+          <option>Turndown Service</option>
+          <option>Room Service</option>
+          <option>Luxury Standards</option>
+          <option>Housekeeping</option>
+          <option>Sustainable Tourism</option>
+          <option>Leadership & Training</option>
+          <option>F&B Stories</option>
+          <option>Career Reflections</option>
+          <option>Internship Moments</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Your Story * — write freely, as much as you like</label>
+        <textarea id="fContent" placeholder="What happened? Who was involved? What did it feel like? What did it teach you?" oninput="updateChar('fContent','contentCount',6000)" maxlength="6000"></textarea>
+        <div class="char-count"><span id="contentCount">0</span>/6000</div>
+      </div>
+      <div class="field">
+        <label>Short Preview (shown on card — optional)</label>
+        <input type="text" id="fSummary" placeholder="One line teaser — auto-generated if blank" maxlength="120" oninput="updateChar('fSummary','summaryCount',120)"/>
+        <div class="char-count"><span id="summaryCount">0</span>/120</div>
+      </div>
+      <div class="panel-actions">
+        <button class="btn-cancel" onclick="closeWrite()">Cancel</button>
+        <button class="btn-publish" onclick="publishPost()">Publish Story →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READ OVERLAY -->
+<div class="overlay" id="readOverlay" onclick="overlayClick(event,'readOverlay')">
+  <div class="read-panel">
+    <div class="read-img">
+      <img id="readImg" src="" alt=""/>
+      <div class="read-img-overlay"></div>
+      <div class="read-img-meta">
+        <div class="read-img-tag" id="readTag"></div>
+        <h2 id="readTitle"></h2>
+      </div>
+    </div>
+    <div class="read-body">
+      <div class="read-meta" id="readMeta"></div>
+      <div class="story-text" id="readContent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY='dhaval_blog_v4';
+const SESSION_KEY='dhaval_admin';
+const ADMIN_PASSWORD='Langham2025';
+
+const CARD_PHOTOS=[
+  'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80',
+  'https://images.unsplash.com/photo-1615460549969-36fa19521a4f?w=700&q=80',
+  'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=80',
+  'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80',
+  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700&q=80',
+  'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=700&q=80',
+  'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=700&q=80',
+  'https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?w=700&q=80',
+];
+
+function isAdmin(){return sessionStorage.getItem(SESSION_KEY)==='yes'}
+function getPosts(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
+function savePosts(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function setAdminUI(on){
+  document.getElementById('adminBtn').style.display=on?'inline-block':'none';
+  document.getElementById('logoutBtn').style.display=on?'inline-block':'none';
+  document.getElementById('lockIcon').style.display=on?'none':'inline-block';
+  on?document.body.classList.add('admin-mode'):document.body.classList.remove('admin-mode');
+}
+
+function renderPosts(){
+  const posts=getPosts();
+  document.getElementById('statPosts').textContent=posts.length;
+  const grid=document.getElementById('postsGrid');
+  const empty=document.getElementById('emptyState');
+  const featuredArea=document.getElementById('featuredArea');
+
+  if(posts.length===0){
+    empty.style.display='block';
+    grid.innerHTML='';
+    featuredArea.innerHTML='<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:var(--muted);text-align:center;padding:3rem 0">Stories coming soon...</p>';
+    return;
+  }
+  empty.style.display='none';
+
+  // Featured — first 3 posts
+  const featured=posts.slice(0,3);
+  const fp=featured[0];
+  const fp_photo=CARD_PHOTOS[0];
+  const side1=featured[1];
+  const side2=featured[2];
+  featuredArea.innerHTML=`
+    <div class="featured-grid reveal">
+      <div class="featured-main" onclick="openRead(0)">
+        <img src="${fp_photo}" alt="${esc(fp.title)}" loading="lazy"/>
+        <div class="featured-main-overlay"></div>
+        <div class="featured-main-body">
+          <div class="featured-badge">${esc(fp.category)}</div>
+          <h2>${esc(fp.title)}</h2>
+          <p>${esc(fp.summary||fp.content.slice(0,120)+'…')}</p>
+          <span class="read-link">Read Story →</span>
+        </div>
+      </div>
+      <div class="featured-side">
+        ${side1?`<div class="side-card" onclick="openRead(1)">
+          <img src="${CARD_PHOTOS[1]}" alt="${esc(side1.title)}" loading="lazy"/>
+          <div class="side-card-overlay"></div>
+          <div class="side-card-body">
+            <div class="side-tag">${esc(side1.category)}</div>
+            <h3>${esc(side1.title)}</h3>
+          </div>
+        </div>`:`<div class="side-card" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.15);font-family:\'Cormorant Garamond\',serif;font-style:italic">More stories coming…</span></div>`}
+        ${side2?`<div class="side-card" onclick="openRead(2)">
+          <img src="${CARD_PHOTOS[2]}" alt="${esc(side2.title)}" loading="lazy"/>
+          <div class="side-card-overlay"></div>
+          <div class="side-card-body">
+            <div class="side-tag">${esc(side2.category)}</div>
+            <h3>${esc(side2.title)}</h3>
+          </div>
+        </div>`:`<div class="side-card" style="background:#111;display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.1);font-family:\'Cormorant Garamond\',serif;font-style:italic">More stories coming…</span></div>`}
+      </div>
+    </div>`;
+
+  // All posts grid
+  grid.innerHTML=posts.map((p,i)=>{
+    const photo=CARD_PHOTOS[i%CARD_PHOTOS.length];
+    const summary=p.summary||p.content.slice(0,100)+(p.content.length>100?'…':'');
+    const date=new Date(p.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    const mins=Math.max(1,Math.ceil(p.content.split(' ').length/200));
+    return`<div class="post-card reveal reveal-delay-${(i%3)+1}" onclick="openRead(${i})">
+      <div class="post-card-img">
+        <img src="${photo}" alt="${esc(p.title)}" loading="lazy"/>
+        <div class="post-card-img-overlay"></div>
+        <div class="post-card-tag-img">${esc(p.category)}</div>
+      </div>
+      <div class="post-card-body">
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(summary)}</p>
+        <div class="post-card-footer">
+          <span>${date} · ${mins} min read</span>
+          <button class="delete-btn" onclick="deletePost(event,${i})" title="Delete">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  initReveal();
+}
+
+function openRead(index){
+  const posts=getPosts();
+  const p=posts[index];
+  if(!p)return;
+  const date=new Date(p.date).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const mins=Math.max(1,Math.ceil(p.content.split(' ').length/200));
+  const photo=CARD_PHOTOS[index%CARD_PHOTOS.length];
+  document.getElementById('readImg').src=photo;
+  document.getElementById('readImg').alt=p.title;
+  document.getElementById('readTag').textContent=p.category;
+  document.getElementById('readTitle').textContent=p.title;
+  document.getElementById('readMeta').innerHTML=`<span>${date}</span><span class="read-meta-dot">◆</span><span>${mins} min read</span><span class="read-meta-dot">◆</span><span>Dhaval Joshi</span>`;
+  document.getElementById('readContent').textContent=p.content;
+  document.getElementById('readOverlay').classList.add('active');
+}
+function closeRead(){document.getElementById('readOverlay').classList.remove('active')}
+
+function openLogin(){
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwError').style.display='none';
+  document.getElementById('pwField').classList.remove('error');
+  document.getElementById('loginOverlay').classList.add('active');
+  setTimeout(()=>document.getElementById('pwInput').focus(),100);
+}
+function closeLogin(){document.getElementById('loginOverlay').classList.remove('active')}
+
+function checkLogin(){
+  if(document.getElementById('pwInput').value===ADMIN_PASSWORD){
+    sessionStorage.setItem(SESSION_KEY,'yes');
+    setAdminUI(true);
+    closeLogin();
+    renderPosts();
+    showToast('Welcome back, Dhaval!');
+  }else{
+    document.getElementById('pwError').style.display='block';
+    document.getElementById('pwField').classList.add('error');
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function logout(){
+  sessionStorage.removeItem(SESSION_KEY);
+  setAdminUI(false);
+  renderPosts();
+  showToast('Logged out successfully.');
+}
+
+function openWrite(){
+  if(!isAdmin()){openLogin();return}
+  document.getElementById('writeOverlay').classList.add('active');
+  setTimeout(()=>document.getElementById('fTitle').focus(),100);
+}
+function closeWrite(){document.getElementById('writeOverlay').classList.remove('active')}
+
+function overlayClick(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('active')}
+
+function deletePost(e,i){
+  if(!isAdmin())return;
+  e.stopPropagation();
+  if(!confirm('Delete this story? This cannot be undone.'))return;
+  const posts=getPosts();
+  posts.splice(i,1);
+  savePosts(posts);
+  renderPosts();
+  showToast('Story deleted.');
+}
+
+function publishPost(){
+  const title=document.getElementById('fTitle').value.trim();
+  const cat=document.getElementById('fCat').value;
+  const content=document.getElementById('fContent').value.trim();
+  const summary=document.getElementById('fSummary').value.trim();
+  if(!title){alert('Please add a title.');document.getElementById('fTitle').focus();return}
+  if(!cat){alert('Please choose a category.');document.getElementById('fCat').focus();return}
+  if(!content){alert('Please write your story.');document.getElementById('fContent').focus();return}
+  const posts=getPosts();
+  posts.unshift({title,category:cat,content,summary,date:new Date().toISOString()});
+  savePosts(posts);
+  renderPosts();
+  ['fTitle','fContent','fSummary'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCat').value='';
+  ['titleCount','contentCount','summaryCount'].forEach(id=>document.getElementById(id).textContent='0');
+  closeWrite();
+  showToast('Story published!');
+  document.getElementById('stories').scrollIntoView({behavior:'smooth'});
+}
+
+function updateChar(inputId,countId,max){
+  const val=document.getElementById(inputId).value.length;
+  const el=document.getElementById(countId);
+  el.textContent=val;
+  el.style.color=val>max*0.9?'#e24b4a':'var(--muted)';
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent='✦ '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Scroll animations
+function initReveal(){
+  const els=document.querySelectorAll('.reveal:not(.visible)');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+  },{threshold:0.12});
+  els.forEach(el=>obs.observe(el));
+}
+
+// Navbar scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeWrite();closeRead();closeLogin();}
+});
+
+setAdminUI(isAdmin());
+renderPosts();
+initReveal();
+</script>
+</body>
+</html>
