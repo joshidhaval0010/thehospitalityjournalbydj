@@ -4,381 +4,531 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>The Hospitality Journal — Dhaval Joshi</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400;1,6..96,700&family=Outfit:wght@300;400;500;600&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#C9A96E;--gold-light:#E8D5A3;--gold-dark:#9A7340;
-  --black:#0A0A0A;--off-black:#111;--charcoal:#1A1A1A;
-  --white:#FFFFFF;--off-white:#FAF8F4;--cream:#F5F0E8;
-  --muted:#888;--border:rgba(255,255,255,0.12);
-  --border-dark:rgba(0,0,0,0.1);
+  --g:#C4A265;--g2:#E8D4A8;--g3:#8A6A35;
+  --ink:#0D0D0D;--ink2:#1A1A1A;--ink3:#2A2A2A;
+  --fog:#888;--border:rgba(0,0,0,0.09);
+  --page:#FAFAF8;--warm:#F4F0E8;--card:#FFFFFF;
+  --red:#C0392B;
 }
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Outfit',sans-serif;background:var(--page);color:var(--ink);overflow-x:hidden;cursor:default}
 
-/* ── SCROLL ANIMATIONS ── */
-.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:0.1s}
-.reveal-delay-2{transition-delay:0.2s}
-.reveal-delay-3{transition-delay:0.35s}
+/* ─── PAGE SYSTEM ─── */
+.page{display:none;min-height:100vh;animation:pageFadeIn 0.5s ease}
+.page.active{display:block}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── NAVBAR ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 3rem;height:72px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s,backdrop-filter 0.4s,border-color 0.4s;border-bottom:1px solid transparent}
-nav.scrolled{background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-color:var(--border)}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--white);text-decoration:none;letter-spacing:0.04em}
-.nav-logo em{color:var(--gold);font-style:italic}
-.nav-center{display:flex;gap:2.5rem;list-style:none}
-.nav-center a{font-size:0.72rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s}
-.nav-center a:hover{color:var(--gold)}
-.nav-right{display:flex;align-items:center;gap:1rem}
-#lockIcon{font-size:0.85rem;cursor:pointer;color:rgba(255,255,255,0.5);padding:0.4rem 0.7rem;border:1px solid rgba(255,255,255,0.2);border-radius:2px;transition:all 0.2s;user-select:none}
-#lockIcon:hover{color:var(--gold);border-color:var(--gold)}
-#adminBtn{display:none;background:var(--gold);color:var(--black);padding:0.5rem 1.2rem;border-radius:2px;cursor:pointer;border:none;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:background 0.2s}
-#adminBtn:hover{background:var(--gold-light)}
-#logoutBtn{display:none;background:none;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.15);padding:0.4rem 0.9rem;border-radius:2px;cursor:pointer;font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-#logoutBtn:hover{color:var(--white);border-color:rgba(255,255,255,0.4)}
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;transition:all 0.4s}
+nav.dark{background:var(--ink);border-bottom:1px solid rgba(255,255,255,0.06)}
+nav.light{background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Bodoni Moda',serif;font-size:1rem;font-weight:700;letter-spacing:0.05em;text-decoration:none;transition:color 0.3s}
+nav.dark .nav-logo{color:#fff}
+nav.light .nav-logo{color:var(--ink)}
+.nav-logo em{color:var(--g);font-style:italic}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{font-size:0.7rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;cursor:pointer}
+nav.dark .nav-links a{color:rgba(255,255,255,0.55)}
+nav.dark .nav-links a:hover{color:var(--g)}
+nav.light .nav-links a{color:var(--fog)}
+nav.light .nav-links a:hover{color:var(--ink)}
+#adminBtn{display:none;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;padding:0.5rem 1.25rem;border-radius:2px;font-family:'Outfit',sans-serif;transition:all 0.2s}
+nav.dark #adminBtn{background:var(--g);color:var(--ink)}
+nav.light #adminBtn{background:var(--ink);color:#fff}
+#adminBtn:hover{background:var(--g2);color:var(--ink)!important}
+#logoutBtn{display:none;font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;padding:0.45rem 0.9rem;font-family:'Outfit',sans-serif;background:none;transition:all 0.2s}
+nav.dark #logoutBtn{color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.15)}
+nav.dark #logoutBtn:hover{color:#fff;border-color:rgba(255,255,255,0.4)}
+nav.light #logoutBtn{color:var(--fog);border:1px solid var(--border)}
+nav.light #logoutBtn:hover{color:var(--ink)}
+#lockBtn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;transition:all 0.2s;background:none;border:none}
+nav.dark #lockBtn{border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.4)}
+nav.dark #lockBtn:hover{border-color:var(--g);color:var(--g)}
+nav.light #lockBtn{border:1px solid var(--border);color:var(--fog)}
+nav.light #lockBtn:hover{border-color:var(--g3);color:var(--g3)}
 
-/* ── HERO ── */
-.hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1800&q=85');background-size:cover;background-position:center;transform:scale(1.05);transition:transform 8s ease;animation:heroZoom 8s ease forwards}
-@keyframes heroZoom{from{transform:scale(1.05)}to{transform:scale(1)}}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.3) 60%,rgba(0,0,0,0.1) 100%)}
-.hero-overlay2{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5) 0%,transparent 50%)}
-.hero-content{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 3rem;width:100%}
-.hero-eyebrow{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:fadeUp 1s ease 0.3s forwards}
-.hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--gold)}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:1.05;color:var(--white);margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s ease 0.5s forwards}
-.hero h1 em{font-style:italic;color:var(--gold)}
-.hero-desc{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:rgba(255,255,255,0.8);max-width:480px;line-height:1.7;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s ease 0.7s forwards}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 1s ease 0.9s forwards}
-.btn-hero-primary{background:var(--gold);color:var(--black);padding:0.85rem 2rem;font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block;transition:background 0.2s,transform 0.2s}
-.btn-hero-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
-.btn-hero-outline{background:transparent;color:var(--white);padding:0.85rem 2rem;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.5);cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block;transition:all 0.2s}
-.btn-hero-outline:hover{border-color:var(--gold);color:var(--gold)}
-.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.5);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0;animation:fadeUp 1s ease 1.2s forwards}
-.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease infinite}
-@keyframes scrollPulse{0%,100%{opacity:0.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.8)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+/* ─── HOME HERO ─── */
+.hero{height:100vh;min-height:620px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:var(--ink)}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1800&q=80');background-size:cover;background-position:center;opacity:0.45;animation:bgZoom 10s ease forwards}
+@keyframes bgZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,1) 0%,rgba(13,13,13,0.4) 50%,rgba(13,13,13,0.1) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 3rem 5rem;max-width:900px}
+.hero-eyebrow{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--g);font-weight:500;margin-bottom:1.5rem;opacity:0;animation:slideUp 1s ease 0.4s forwards;display:flex;align-items:center;gap:1rem}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--g)}
+.hero h1{font-family:'Bodoni Moda',serif;font-size:clamp(3.5rem,7vw,6.5rem);font-weight:900;line-height:0.95;color:#fff;margin-bottom:1.75rem;opacity:0;animation:slideUp 1s ease 0.6s forwards}
+.hero h1 em{font-style:italic;color:var(--g)}
+.hero-sub{font-family:'Cormorant',serif;font-size:1.15rem;font-style:italic;color:rgba(255,255,255,0.6);margin-bottom:2.5rem;max-width:480px;line-height:1.7;opacity:0;animation:slideUp 1s ease 0.8s forwards}
+.hero-actions{display:flex;gap:1rem;opacity:0;animation:slideUp 1s ease 1s forwards}
+.btn-primary{background:var(--g);color:var(--ink);font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;padding:0.85rem 2rem;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;border-radius:2px}
+.btn-primary:hover{background:var(--g2);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:#fff;font-size:0.72rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;padding:0.85rem 2rem;border:1px solid rgba(255,255,255,0.25);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;border-radius:2px}
+.btn-ghost:hover{border-color:var(--g);color:var(--g)}
+.hero-scroll-hint{position:absolute;bottom:2.5rem;right:3rem;writing-mode:vertical-rl;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.3);z-index:2;display:flex;align-items:center;gap:0.75rem;opacity:0;animation:fadeIn 1s ease 1.5s forwards}
+.hero-scroll-hint::after{content:'';width:1px;height:48px;background:linear-gradient(to bottom,rgba(196,162,101,0.6),transparent)}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ── STATS BAR ── */
-.stats-bar{background:var(--charcoal);padding:2rem 3rem}
-.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;border-left:1px solid rgba(201,169,110,0.3)}
-.stat-item{padding-left:2rem;border-left:1px solid rgba(201,169,110,0.15)}
-.stat-item:first-child{border:none;padding-left:0}
-.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
-.stat-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.3rem}
+/* ─── TICKER ─── */
+.ticker{background:var(--g);padding:0.75rem 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;animation:ticker 25s linear infinite}
+.ticker-item{font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink);padding:0 3rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ── SECTION LABELS ── */
-.section-label{display:flex;align-items:center;gap:1rem;margin-bottom:3rem}
-.section-label span{font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);font-weight:500}
-.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border-dark),transparent)}
+/* ─── SECTION ─── */
+.section{padding:6rem 3rem;max-width:1160px;margin:0 auto}
+.section-tag{font-size:0.63rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--g3);font-weight:600;margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.section-tag::after{content:'';flex:1;max-width:80px;height:1px;background:var(--g3)}
 
-/* ── FEATURED ── */
-.featured-section{padding:6rem 3rem;max-width:1100px;margin:0 auto}
-.featured-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2px;border-radius:4px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.15)}
-.featured-main{position:relative;min-height:540px;cursor:pointer;overflow:hidden}
-.featured-main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease}
-.featured-main:hover img{transform:scale(1.05)}
-.featured-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.2) 60%,transparent 100%)}
-.featured-main-body{position:absolute;bottom:0;left:0;right:0;padding:2.5rem}
-.featured-badge{display:inline-block;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;padding:0.3rem 0.8rem;border-radius:1px;margin-bottom:1rem}
-.featured-main-body h2{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--white);line-height:1.25;margin-bottom:0.75rem}
-.featured-main-body p{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem}
-.read-link{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);font-weight:500;display:inline-flex;align-items:center;gap:0.5rem;transition:gap 0.2s}
-.read-link:hover{gap:0.8rem}
+/* ─── FEATURED ─── */
+.featured-block{display:grid;grid-template-columns:1.6fr 1fr;gap:3px;border-radius:6px;overflow:hidden;background:var(--ink2);box-shadow:0 40px 100px rgba(0,0,0,0.18)}
+.feat-main{position:relative;min-height:520px;cursor:pointer;overflow:hidden}
+.feat-main img,.feat-side-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.8s ease}
+.feat-main:hover img,.feat-side-card:hover img{transform:scale(1.06)}
+.feat-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.15) 60%,transparent 100%)}
+.feat-main-body{position:absolute;bottom:0;padding:2.25rem}
+.feat-tag{display:inline-block;background:var(--g);color:var(--ink);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:0.28rem 0.75rem;border-radius:1px;margin-bottom:0.85rem}
+.feat-main-body h2{font-family:'Bodoni Moda',serif;font-size:1.9rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:0.75rem}
+.feat-excerpt{font-family:'Cormorant',serif;font-style:italic;font-size:1rem;color:rgba(255,255,255,0.65);line-height:1.65;margin-bottom:1.1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.feat-readmore{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g);font-weight:600;display:inline-flex;align-items:center;gap:0.5rem;transition:gap 0.2s}
+.feat-readmore:hover{gap:0.85rem;cursor:pointer}
+.feat-side{display:flex;flex-direction:column;gap:3px}
+.feat-side-card{position:relative;flex:1;min-height:180px;cursor:pointer;overflow:hidden}
+.feat-side-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88),rgba(0,0,0,0.1) 80%)}
+.feat-side-body{position:absolute;bottom:0;padding:1.25rem}
+.feat-side-tag{font-size:0.57rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:0.35rem}
+.feat-side-body h3{font-family:'Bodoni Moda',serif;font-size:0.98rem;font-weight:700;color:#fff;line-height:1.3}
+.feat-placeholder{flex:1;background:var(--ink3);display:flex;align-items:center;justify-content:center;min-height:180px}
+.feat-placeholder span{font-family:'Cormorant',serif;font-style:italic;color:rgba(255,255,255,0.1);font-size:0.9rem}
 
-.featured-side{display:flex;flex-direction:column;gap:2px}
-.side-card{position:relative;flex:1;min-height:180px;cursor:pointer;overflow:hidden}
-.side-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
-.side-card:hover img{transform:scale(1.08)}
-.side-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 100%)}
-.side-card-body{position:absolute;bottom:0;padding:1.25rem}
-.side-tag{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:0.4rem}
-.side-card-body h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--white);line-height:1.35}
-
-/* ── PULLQUOTE ── */
-.pullquote-section{background:var(--charcoal);padding:5rem 3rem;position:relative;overflow:hidden}
-.pullquote-section::before{content:'\201C';position:absolute;top:-2rem;left:3rem;font-family:'Playfair Display',serif;font-size:20rem;color:rgba(201,169,110,0.06);line-height:1;pointer-events:none}
-.pullquote-inner{max-width:800px;margin:0 auto;text-align:center}
-.pullquote-inner blockquote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3vw,2.2rem);font-style:italic;font-weight:300;color:var(--white);line-height:1.5;margin-bottom:1.5rem}
-.pullquote-inner cite{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
-
-/* ── ALL POSTS ── */
-.posts-section{padding:6rem 3rem;max-width:1100px;margin:0 auto}
-.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-.post-card{background:var(--white);border-radius:4px;overflow:hidden;cursor:pointer;transition:transform 0.3s ease,box-shadow 0.3s ease;box-shadow:0 2px 20px rgba(0,0,0,0.06)}
-.post-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.12)}
-.post-card-img{position:relative;height:200px;overflow:hidden}
-.post-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
+/* ─── POSTS GRID ─── */
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem}
+.post-card{background:var(--card);border-radius:4px;overflow:hidden;cursor:pointer;box-shadow:0 2px 24px rgba(0,0,0,0.07);transition:transform 0.35s ease,box-shadow 0.35s ease}
+.post-card:hover{transform:translateY(-8px);box-shadow:0 24px 56px rgba(0,0,0,0.14)}
+.post-card-img{position:relative;height:210px;overflow:hidden}
+.post-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease}
 .post-card:hover .post-card-img img{transform:scale(1.08)}
-.post-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5),transparent)}
-.post-card-tag-img{position:absolute;top:1rem;left:1rem;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;padding:0.25rem 0.65rem;border-radius:1px}
+.post-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55),transparent 60%)}
+.card-tag{position:absolute;top:1rem;left:1rem;background:var(--g);color:var(--ink);font-size:0.57rem;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;padding:0.25rem 0.65rem;border-radius:1px}
 .post-card-body{padding:1.5rem}
-.post-card h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.4;color:var(--charcoal);margin-bottom:0.6rem}
-.post-card p{font-size:0.82rem;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1rem}
-.post-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:0.75rem;border-top:1px solid rgba(0,0,0,0.07);font-size:0.68rem;color:var(--muted);letter-spacing:0.04em}
-.delete-btn{display:none;background:none;border:none;color:#ddd;cursor:pointer;font-size:0.72rem;padding:0.2rem 0.45rem;border-radius:2px;transition:color 0.2s,background 0.2s}
-.delete-btn:hover{color:#e24b4a;background:#fff0f0}
+.post-card-body h3{font-family:'Bodoni Moda',serif;font-size:1.05rem;font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:0.6rem}
+.post-card-body p{font-size:0.82rem;color:var(--fog);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1rem}
+.post-card-meta{display:flex;justify-content:space-between;align-items:center;font-size:0.67rem;color:#bbb;letter-spacing:0.04em;padding-top:0.85rem;border-top:1px solid var(--border)}
+.delete-btn{display:none;background:none;border:none;cursor:pointer;color:#ddd;font-size:0.72rem;padding:0.2rem 0.45rem;border-radius:2px;transition:all 0.2s;font-family:'Outfit',sans-serif}
+.delete-btn:hover{color:var(--red);background:#fff0f0}
 .admin-mode .delete-btn{display:inline-block}
+.no-posts{text-align:center;padding:5rem 2rem;grid-column:1/-1}
+.no-posts p{font-family:'Cormorant',serif;font-style:italic;font-size:1.3rem;color:#ccc}
 
-/* empty state */
-.empty-state{text-align:center;padding:4rem 2rem}
-.empty-box{display:inline-block;border:2px dashed rgba(0,0,0,0.1);border-radius:8px;padding:3rem 4rem;max-width:480px}
-.empty-box p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--muted);margin-bottom:0}
+/* ─── PULLQUOTE BANNER ─── */
+.pq-banner{background:var(--ink);padding:5.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.pq-banner::before{content:'\201C';position:absolute;top:-3rem;left:2rem;font-family:'Bodoni Moda',serif;font-size:18rem;color:rgba(196,162,101,0.05);line-height:1;pointer-events:none}
+.pq-banner blockquote{font-family:'Bodoni Moda',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2rem);color:#fff;line-height:1.5;max-width:760px;margin:0 auto 1.25rem;font-weight:400}
+.pq-banner cite{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--g);font-weight:600}
 
-/* ── ABOUT ── */
-.about-section{position:relative;overflow:hidden}
-.about-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1400&q=80');background-size:cover;background-position:center;background-attachment:fixed}
-.about-overlay{position:absolute;inset:0;background:rgba(10,10,10,0.88)}
-.about-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:6rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-.about-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:1.5rem}
-.about-avatar{width:140px;height:140px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--black);border:4px solid rgba(201,169,110,0.3)}
-.about-creds{display:flex;flex-direction:column;gap:0.6rem;width:100%}
-.cred{display:flex;align-items:center;gap:0.75rem;font-size:0.78rem;color:rgba(255,255,255,0.6)}
-.cred::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0}
-.about-text h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:0.5rem}
-.about-text h2 em{color:var(--gold);font-style:italic}
-.about-subtitle{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.5rem}
-.about-text p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.8;margin-bottom:1rem}
+/* ─── SINGLE POST PAGE ─── */
+.post-hero{height:70vh;min-height:480px;position:relative;overflow:hidden;background:var(--ink)}
+.post-hero img{width:100%;height:100%;object-fit:cover;opacity:0.55}
+.post-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,1) 0%,rgba(13,13,13,0.2) 60%)}
+.post-hero-content{position:absolute;bottom:0;left:0;right:0;padding:3rem;max-width:860px}
+.post-hero-tag{display:inline-block;background:var(--g);color:var(--ink);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:0.28rem 0.75rem;border-radius:1px;margin-bottom:1rem}
+.post-hero-title{font-family:'Bodoni Moda',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:0.75rem}
+.post-hero-meta{font-size:0.68rem;color:rgba(255,255,255,0.45);letter-spacing:0.08em;display:flex;gap:1rem;align-items:center}
+.post-hero-meta span{display:flex;align-items:center;gap:0.35rem}
+.post-body-wrap{max-width:780px;margin:0 auto;padding:4rem 3rem 6rem}
+.post-back{font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--fog);font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:2.5rem;transition:color 0.2s;background:none;border:none;font-family:'Outfit',sans-serif}
+.post-back:hover{color:var(--g3)}
+.post-content{font-family:'Cormorant',serif;font-size:1.2rem;color:var(--ink3);line-height:1.9}
+.post-content p{margin-bottom:1.75rem}
+.post-content strong{font-weight:600;color:var(--ink)}
+.post-content em{font-style:italic}
+.post-content u{text-decoration:underline;text-underline-offset:3px}
+.post-content h2{font-family:'Bodoni Moda',serif;font-size:1.6rem;font-weight:700;color:var(--ink);margin:2.5rem 0 1rem;line-height:1.2}
+.post-content blockquote.pull-quote{border:none;margin:2.5rem -1.5rem;padding:2rem 2.5rem;background:var(--warm);border-left:4px solid var(--g);font-family:'Bodoni Moda',serif;font-style:italic;font-size:1.35rem;color:var(--ink);line-height:1.5;border-radius:0 4px 4px 0}
+.post-content img{max-width:100%;border-radius:4px;margin:2rem 0;display:block}
 
-/* ── FOOTER ── */
-footer{background:var(--black);padding:3rem;text-align:center;border-top:1px solid rgba(201,169,110,0.15)}
-.footer-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:0.5rem}
-.footer-logo em{color:var(--gold);font-style:italic}
-.footer-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:rgba(255,255,255,0.35);margin-bottom:1.5rem}
-.footer-divider{width:60px;height:1px;background:rgba(201,169,110,0.3);margin:1.5rem auto}
-footer p{font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em}
+/* ─── WRITE PAGE ─── */
+.write-page{padding-top:68px;min-height:100vh;background:var(--warm)}
+.write-header{background:var(--ink);padding:3rem 3rem 2.5rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.write-header h1{font-family:'Bodoni Moda',serif;font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:0.4rem}
+.write-header p{font-size:0.82rem;color:rgba(255,255,255,0.4);font-style:italic}
+.write-body{max-width:900px;margin:0 auto;padding:3rem 3rem 5rem}
+.field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem}
+.field label{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--fog);font-weight:600}
+.field input,.field select{background:#fff;border:1.5px solid var(--border);border-radius:3px;padding:0.8rem 1rem;font-size:0.95rem;font-family:'Outfit',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;width:100%}
+.field input:focus,.field select:focus{border-color:var(--g)}
+.char-hint{font-size:0.68rem;color:#ccc;text-align:right;margin-top:3px}
 
-/* ── OVERLAYS ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;backdrop-filter:blur(6px)}
+/* cover photo */
+.cover-upload-area{border:2px dashed var(--border);border-radius:4px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;background:#fff;position:relative}
+.cover-upload-area:hover{border-color:var(--g);background:rgba(196,162,101,0.04)}
+.cover-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cover-upload-area p{font-size:0.8rem;color:var(--fog);margin-top:0.3rem}
+.cover-upload-icon{font-size:2rem;margin-bottom:0.5rem;opacity:0.4}
+.cover-preview-wrap{position:relative;border-radius:4px;overflow:hidden;margin-top:0.75rem}
+.cover-preview-wrap img{width:100%;height:220px;object-fit:cover;display:block}
+.cover-remove{position:absolute;top:0.75rem;right:0.75rem;background:rgba(0,0,0,0.7);color:#fff;border:none;cursor:pointer;font-size:0.75rem;padding:0.35rem 0.75rem;border-radius:2px;font-family:'Outfit',sans-serif;transition:background 0.2s}
+.cover-remove:hover{background:var(--red)}
+
+/* editor */
+.editor-wrap{background:#fff;border:1.5px solid var(--border);border-radius:4px;overflow:hidden;transition:border-color 0.2s}
+.editor-wrap:focus-within{border-color:var(--g)}
+.editor-toolbar{display:flex;align-items:center;gap:0px;padding:0.6rem 0.75rem;border-bottom:1.5px solid var(--border);flex-wrap:wrap;gap:2px}
+.tb-btn{background:none;border:none;cursor:pointer;padding:0.45rem 0.6rem;border-radius:3px;font-size:0.82rem;color:var(--ink3);transition:all 0.15s;font-family:'Outfit',sans-serif;font-weight:500;display:flex;align-items:center;gap:0.35rem;white-space:nowrap}
+.tb-btn:hover{background:var(--warm);color:var(--ink)}
+.tb-btn.active{background:var(--warm);color:var(--g3)}
+.tb-btn b{font-size:0.95rem}
+.tb-btn i{font-size:0.95rem;font-style:italic}
+.tb-divider{width:1px;height:20px;background:var(--border);margin:0 4px}
+.tb-btn.pq-btn{color:var(--g3);font-style:italic}
+.tb-btn.img-btn{color:#555}
+#editorContent{min-height:320px;padding:1.5rem;font-family:'Cormorant',serif;font-size:1.15rem;color:var(--ink);line-height:1.9;outline:none;cursor:text}
+#editorContent:empty::before{content:attr(data-placeholder);color:#ccc;font-style:italic;pointer-events:none}
+#editorContent blockquote.pull-quote{border:none;margin:2rem -0.5rem;padding:1.5rem 2rem;background:var(--warm);border-left:4px solid var(--g);font-family:'Bodoni Moda',serif;font-style:italic;font-size:1.2rem;color:var(--ink);line-height:1.5;border-radius:0 3px 3px 0}
+#editorContent img{max-width:100%;border-radius:4px;margin:1rem 0;display:block}
+#editorContent p{margin-bottom:0.5rem}
+input[type=file].hidden-input{display:none}
+
+/* write actions */
+.write-actions{display:flex;gap:1rem;margin-top:2rem}
+.btn-cancel-write{flex:1;background:#fff;color:var(--ink);border:1.5px solid var(--border);padding:0.85rem;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.btn-cancel-write:hover{background:var(--warm)}
+.btn-publish{flex:2;background:var(--ink);color:#fff;border:none;padding:0.85rem;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.btn-publish:hover{background:var(--g3)}
+
+/* ─── ABOUT PAGE ─── */
+.about-hero{height:60vh;min-height:400px;position:relative;overflow:hidden;background:var(--ink)}
+.about-hero img{width:100%;height:100%;object-fit:cover;opacity:0.4}
+.about-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--ink),transparent 60%)}
+.about-hero-content{position:absolute;bottom:0;padding:3rem;display:flex;align-items:flex-end;gap:2rem}
+.about-avatar{width:100px;height:100px;background:linear-gradient(135deg,var(--g),var(--g3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bodoni Moda',serif;font-size:2rem;font-weight:900;color:var(--ink);border:3px solid rgba(196,162,101,0.4);flex-shrink:0}
+.about-hero-text h1{font-family:'Bodoni Moda',serif;font-size:2.8rem;font-weight:900;color:#fff;line-height:1.1}
+.about-hero-text h1 em{color:var(--g);font-style:italic}
+.about-hero-text p{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--g);font-weight:500;margin-top:0.3rem}
+.about-body{max-width:860px;margin:0 auto;padding:4rem 3rem 6rem;display:grid;grid-template-columns:1fr 1.4fr;gap:4rem}
+.about-sidebar{}
+.about-creds-title{font-size:0.63rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--fog);font-weight:600;margin-bottom:1.25rem}
+.cred-list{display:flex;flex-direction:column;gap:0.75rem}
+.cred-item{display:flex;align-items:flex-start;gap:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.cred-dot{width:6px;height:6px;background:var(--g);border-radius:50%;flex-shrink:0;margin-top:0.45rem}
+.cred-text{font-size:0.82rem;color:var(--ink3);line-height:1.5}
+.cred-text small{display:block;font-size:0.72rem;color:var(--fog);margin-top:0.1rem}
+.about-main p{font-family:'Cormorant',serif;font-size:1.15rem;color:var(--ink3);line-height:1.9;margin-bottom:1.5rem}
+.about-main h2{font-family:'Bodoni Moda',serif;font-size:1.6rem;font-weight:700;color:var(--ink);margin-bottom:1rem;line-height:1.2}
+
+/* ─── FOOTER ─── */
+.site-footer{background:var(--ink);padding:3.5rem 3rem;border-top:1px solid rgba(196,162,101,0.15)}
+.footer-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:'Bodoni Moda',serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:0.04em}
+.footer-logo em{color:var(--g);font-style:italic}
+.footer-right{text-align:right}
+.footer-right p{font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.06em}
+.footer-tag{font-family:'Cormorant',serif;font-style:italic;font-size:0.9rem;color:rgba(255,255,255,0.3);margin-bottom:0.35rem}
+
+/* ─── LOGIN OVERLAY ─── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(8px)}
 .overlay.active{display:flex}
+.login-box{background:#fff;border-radius:6px;width:100%;max-width:380px;overflow:hidden;animation:panelIn 0.25s ease}
+.login-box-header{background:var(--ink);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.login-box-header h3{font-family:'Bodoni Moda',serif;font-size:1.1rem;color:#fff;font-weight:700}
+.overlay-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.3rem;cursor:pointer;padding:0;line-height:1;transition:color 0.2s}
+.overlay-close:hover{color:#fff}
+.login-box-body{padding:2rem}
+.login-box-body p{font-size:0.82rem;color:var(--fog);margin-bottom:1.5rem;line-height:1.6}
+.login-field{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem}
+.login-field label{font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--fog);font-weight:600}
+.login-field input{background:#f8f8f6;border:1.5px solid var(--border);border-radius:3px;padding:0.75rem 1rem;font-size:0.95rem;font-family:'Outfit',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;width:100%}
+.login-field input:focus{border-color:var(--g)}
+.login-field.error input{border-color:var(--red)}
+.err-msg{font-size:0.73rem;color:var(--red);margin-top:0.25rem;display:none}
+.btn-login{width:100%;background:var(--g);color:var(--ink);border:none;padding:0.85rem;font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s;margin-top:0.5rem}
+.btn-login:hover{background:var(--g2)}
+@keyframes panelIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* login */
-.login-panel{background:var(--white);border-radius:4px;width:100%;max-width:380px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
-.login-header{background:var(--charcoal);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center}
-.login-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white)}
-.panel-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.4rem;cursor:pointer;line-height:1;padding:0;transition:color 0.2s}
-.panel-close:hover{color:var(--white)}
-.login-body{padding:2rem}
-.login-body p{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
-.field{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1rem}
-.field label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.field input,.field textarea,.field select{background:#f8f7f4;border:1px solid rgba(0,0,0,0.12);border-radius:2px;padding:0.7rem 1rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--charcoal);outline:none;transition:border-color 0.2s;width:100%}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
-.field textarea{min-height:150px;resize:vertical}
-.error-msg{font-size:0.75rem;color:#e24b4a;margin-top:0.25rem;display:none}
-.field.error input{border-color:#e24b4a}
-.btn-gold{width:100%;background:var(--gold);color:var(--black);border:none;padding:0.8rem;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:0.5rem}
-.btn-gold:hover{background:var(--gold-light)}
-
-/* write panel */
-.write-panel{background:var(--white);border-radius:4px;width:100%;max-width:620px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
-.panel-header{background:var(--charcoal);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center}
-.panel-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white)}
-.panel-body{padding:2rem}
-.panel-body .hint{font-size:0.85rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.65;border-left:3px solid var(--gold);padding-left:1rem;font-style:italic}
-.char-count{font-size:0.68rem;color:var(--muted);text-align:right;margin-top:3px}
-.panel-actions{display:flex;gap:0.75rem;margin-top:1.5rem}
-.btn-cancel{flex:1;background:#f5f3ef;color:var(--charcoal);border:1px solid rgba(0,0,0,0.1);padding:0.75rem;font-size:0.75rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
-.btn-cancel:hover{background:#ede9e0}
-.btn-publish{flex:2;background:var(--charcoal);color:var(--white);border:none;padding:0.75rem;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
-.btn-publish:hover{background:var(--gold-dark)}
-
-/* read panel */
-.read-panel{background:var(--white);border-radius:4px;width:100%;max-width:680px;margin:auto;overflow:hidden;animation:panelIn 0.25s ease}
-.read-img{height:320px;overflow:hidden;position:relative}
-.read-img img{width:100%;height:100%;object-fit:cover}
-.read-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
-.read-img-meta{position:absolute;bottom:0;padding:1.75rem}
-.read-img-tag{display:inline-block;background:var(--gold);color:var(--black);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;padding:0.25rem 0.7rem;border-radius:1px;margin-bottom:0.6rem}
-.read-img-meta h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);line-height:1.3}
-.read-body{padding:2.25rem 2rem}
-.read-meta{font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
-.read-meta-dot{color:var(--gold)}
-.story-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--charcoal);line-height:2;white-space:pre-wrap;word-break:break-word}
-
-@keyframes panelIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-/* toast */
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--white);padding:0.9rem 1.75rem;border-radius:4px;border-left:3px solid var(--gold);font-size:0.82rem;z-index:500;opacity:0;transition:transform 0.3s ease,opacity 0.3s ease;white-space:nowrap;pointer-events:none;letter-spacing:0.02em}
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:0.9rem 1.75rem;border-radius:4px;border-left:3px solid var(--g);font-size:0.82rem;z-index:2000;opacity:0;transition:all 0.3s ease;white-space:nowrap;pointer-events:none;font-family:'Outfit',sans-serif;letter-spacing:0.02em}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* photo arrays for cards */
-.bg-1{background:#2C3A2E}
-.bg-2{background:#7A5230}
-.bg-3{background:#1A2535}
-.bg-4{background:#5C2D3A}
-.bg-5{background:#1A3A38}
-.bg-6{background:#3A2850}
+/* ─── STOCK PHOTOS ─── */
+.stock-photos{display:none}
 
-@media(max-width:768px){
+/* ─── SUBSCRIBE SECTION ─── */
+.subscribe-section{background:var(--ink);padding:5rem 3rem;position:relative;overflow:hidden}
+.subscribe-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(196,162,101,0.08),transparent 70%);pointer-events:none}
+.subscribe-inner{max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.subscribe-eyebrow{font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:1rem}
+.subscribe-inner h2{font-family:'Bodoni Moda',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:0.75rem}
+.subscribe-inner h2 em{font-style:italic;color:var(--g)}
+.subscribe-inner p{font-family:'Cormorant',serif;font-style:italic;font-size:1.05rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;line-height:1.7}
+.subscribe-form{display:flex;gap:0;max-width:480px;margin:0 auto;border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,0.12)}
+.subscribe-form input[type=email]{flex:1;background:rgba(255,255,255,0.06);border:none;padding:1rem 1.25rem;font-size:0.9rem;font-family:'Outfit',sans-serif;color:#fff;outline:none}
+.subscribe-form input[type=email]::placeholder{color:rgba(255,255,255,0.3)}
+.subscribe-form button{background:var(--g);color:var(--ink);border:none;padding:1rem 1.5rem;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s;white-space:nowrap}
+.subscribe-form button:hover{background:var(--g2)}
+.subscribe-note{font-size:0.68rem;color:rgba(255,255,255,0.25);margin-top:0.9rem;letter-spacing:0.04em}
+.subscribe-success{display:none;text-align:center;padding:1.5rem}
+.subscribe-success p{font-family:'Cormorant',serif;font-style:italic;font-size:1.15rem;color:var(--g)}
+
+/* ─── SUBSCRIBE POPUP ─── */
+.sub-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:800;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(8px)}
+.sub-popup-overlay.active{display:flex}
+.sub-popup{background:var(--ink);border-radius:6px;width:100%;max-width:480px;overflow:hidden;animation:panelIn 0.3s ease;position:relative;border:1px solid rgba(196,162,101,0.15)}
+.sub-popup-img{height:180px;overflow:hidden;position:relative}
+.sub-popup-img img{width:100%;height:100%;object-fit:cover;opacity:0.5}
+.sub-popup-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--ink),transparent 60%)}
+.sub-popup-img-text{position:absolute;bottom:1rem;left:1.5rem;font-family:'Bodoni Moda',serif;font-size:1rem;color:var(--g);font-style:italic}
+.sub-popup-body{padding:1.75rem 2rem 2rem}
+.sub-popup-close{position:absolute;top:1rem;right:1rem;background:rgba(0,0,0,0.5);border:none;color:rgba(255,255,255,0.5);font-size:1.1rem;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
+.sub-popup-close:hover{color:#fff;background:rgba(0,0,0,0.8)}
+.sub-popup-body h3{font-family:'Bodoni Moda',serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:0.4rem;line-height:1.2}
+.sub-popup-body h3 em{color:var(--g);font-style:italic}
+.sub-popup-body p{font-size:0.82rem;color:rgba(255,255,255,0.45);margin-bottom:1.25rem;line-height:1.6}
+.sub-popup-form{display:flex;flex-direction:column;gap:0.75rem}
+.sub-popup-form input[type=email]{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:3px;padding:0.8rem 1rem;font-size:0.9rem;font-family:'Outfit',sans-serif;color:#fff;outline:none;transition:border-color 0.2s;width:100%}
+.sub-popup-form input[type=email]:focus{border-color:var(--g)}
+.sub-popup-form input[type=email]::placeholder{color:rgba(255,255,255,0.25)}
+.sub-popup-form button{background:var(--g);color:var(--ink);border:none;padding:0.85rem;font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s;width:100%}
+.sub-popup-form button:hover{background:var(--g2)}
+.popup-skip{font-size:0.68rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:0.75rem;cursor:pointer;transition:color 0.2s}
+.popup-skip:hover{color:rgba(255,255,255,0.45)}
+
+/* ─── CHAT WIDGET ─── */
+.chat-bubble{position:fixed;bottom:2rem;right:2rem;z-index:700;display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem}
+.chat-bubble-btn{width:58px;height:58px;background:var(--g);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 8px 32px rgba(196,162,101,0.4);transition:all 0.3s;position:relative}
+.chat-bubble-btn:hover{transform:scale(1.08);box-shadow:0 12px 40px rgba(196,162,101,0.55)}
+.chat-notif{position:absolute;top:-3px;right:-3px;width:18px;height:18px;background:#E74C3C;border-radius:50%;border:2px solid var(--page);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#fff;font-weight:700;font-family:'Outfit',sans-serif}
+.chat-panel{position:fixed;bottom:6.5rem;right:2rem;width:360px;background:#fff;border-radius:16px;box-shadow:0 20px 80px rgba(0,0,0,0.2);z-index:700;overflow:hidden;display:none;flex-direction:column;max-height:520px;animation:chatSlideUp 0.3s ease}
+.chat-panel.open{display:flex}
+@keyframes chatSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.chat-header{background:var(--ink);padding:1rem 1.25rem;display:flex;align-items:center;gap:0.85rem}
+.chat-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--g),var(--g3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bodoni Moda',serif;font-size:0.85rem;font-weight:700;color:var(--ink);flex-shrink:0}
+.chat-header-info{flex:1}
+.chat-header-name{font-size:0.85rem;font-weight:600;color:#fff;letter-spacing:0.02em}
+.chat-header-status{font-size:0.65rem;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:0.35rem}
+.chat-header-status::before{content:'';width:6px;height:6px;background:#2ECC71;border-radius:50%;display:inline-block}
+.chat-close-btn{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:1.1rem;padding:0;line-height:1;transition:color 0.2s}
+.chat-close-btn:hover{color:#fff}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;min-height:200px;scroll-behavior:smooth}
+.chat-msg{display:flex;gap:0.5rem;align-items:flex-end}
+.chat-msg.bot{justify-content:flex-start}
+.chat-msg.user{justify-content:flex-end}
+.chat-msg-avatar{width:28px;height:28px;background:linear-gradient(135deg,var(--g),var(--g3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bodoni Moda',serif;font-size:0.6rem;font-weight:700;color:var(--ink);flex-shrink:0;margin-bottom:2px}
+.chat-bubble-msg{max-width:78%;padding:0.7rem 1rem;border-radius:14px;font-size:0.82rem;line-height:1.5;font-family:'Outfit',sans-serif}
+.chat-msg.bot .chat-bubble-msg{background:var(--warm);color:var(--ink);border-bottom-left-radius:4px}
+.chat-msg.user .chat-bubble-msg{background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.chat-typing{display:flex;align-items:center;gap:4px;padding:0.7rem 1rem;background:var(--warm);border-radius:14px;border-bottom-left-radius:4px;width:fit-content}
+.chat-typing span{width:6px;height:6px;background:var(--fog);border-radius:50%;animation:typingDot 1.2s ease infinite}
+.chat-typing span:nth-child(2){animation-delay:0.2s}
+.chat-typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-5px);opacity:1}}
+.chat-suggestions{display:flex;flex-wrap:wrap;gap:0.4rem;padding:0.5rem 1rem;border-top:1px solid var(--border)}
+.chat-suggestion{background:var(--warm);border:1px solid var(--border);border-radius:20px;padding:0.35rem 0.75rem;font-size:0.72rem;color:var(--ink3);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap}
+.chat-suggestion:hover{background:var(--g);color:var(--ink);border-color:var(--g)}
+.chat-input-row{display:flex;gap:0;border-top:1px solid var(--border)}
+.chat-input-row input{flex:1;border:none;padding:0.9rem 1rem;font-size:0.85rem;font-family:'Outfit',sans-serif;color:var(--ink);background:#fff;outline:none}
+.chat-input-row input::placeholder{color:#ccc}
+.chat-send-btn{background:var(--ink);border:none;color:#fff;padding:0.9rem 1rem;cursor:pointer;font-size:0.9rem;transition:background 0.2s}
+.chat-send-btn:hover{background:var(--g3)}
+
+@media(max-width:900px){
   nav{padding:0 1.5rem}
-  .nav-center{display:none}
-  .hero-content{padding:0 1.5rem}
-  .hero h1{font-size:2.5rem}
-  .featured-grid{grid-template-columns:1fr}
+  .hero-content,.section{padding-left:1.5rem;padding-right:1.5rem}
+  .hero h1{font-size:3rem}
+  .featured-block{grid-template-columns:1fr}
+  .posts-grid{grid-template-columns:1fr 1fr}
+  .write-body,.post-body-wrap{padding:2rem 1.5rem 4rem}
+  .about-body{grid-template-columns:1fr;padding:2rem 1.5rem 4rem}
+  .footer-inner{flex-direction:column;gap:1rem;text-align:center}
+  .footer-right{text-align:center}
+  .post-hero-content{padding:1.5rem}
+}
+@media(max-width:600px){
   .posts-grid{grid-template-columns:1fr}
-  .about-inner{grid-template-columns:1fr}
-  .stats-inner{grid-template-columns:repeat(2,1fr)}
-  .featured-section,.posts-section{padding:4rem 1.5rem}
+  .hero h1{font-size:2.4rem}
+  .nav-links li:not(:last-child){display:none}
+  .write-header{padding:2rem 1.5rem}
 }
 </style>
 </head>
 <body>
+<div id="loadingBar" style="position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--g),var(--g2));z-index:9999;opacity:0;transition:opacity 0.3s"></div>
 
 <!-- NAV -->
-<nav id="navbar">
-  <a class="nav-logo" href="#"><em>The</em> Hospitality Journal</a>
-  <ul class="nav-center">
-    <li><a href="#featured">Featured</a></li>
-    <li><a href="#stories">Stories</a></li>
-    <li><a href="#about">About</a></li>
+<nav id="mainNav" class="dark">
+  <a class="nav-logo" onclick="goHome()"><em>The</em> Hospitality Journal</a>
+  <ul class="nav-links">
+    <li><a onclick="goHome()">Stories</a></li>
+    <li><a onclick="goPage('about')">About</a></li>
+    <li><button id="adminBtn" onclick="goWrite()">+ New Post</button></li>
+    <li><button id="logoutBtn" onclick="doLogout()">Log out</button></li>
+    <li><button id="lockBtn" onclick="openLogin()" title="Admin access">🔒</button></li>
   </ul>
-  <div class="nav-right">
-    <button id="adminBtn" onclick="openWrite()">+ New Post</button>
-    <button id="logoutBtn" onclick="logout()">Log out</button>
-    <span id="lockIcon" onclick="openLogin()" title="Admin access">🔒</span>
-  </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-overlay2"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">Luxury Hospitality · Field Notes</div>
-    <h1>Where <em>Service</em><br>Becomes an<br>Art Form</h1>
-    <p class="hero-desc">Real stories from five-star hotels, quiet turndown rituals, and the human moments that make hospitality extraordinary.</p>
-    <div class="hero-btns">
-      <a href="#stories" class="btn-hero-primary">Read the Stories</a>
-      <a href="#about" class="btn-hero-outline">About Dhaval</a>
-    </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
+<!-- ════ PAGE: HOME ════ -->
+<div class="page active" id="page-home">
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner reveal">
-    <div class="stat-item">
-      <div class="stat-num" id="statPosts">0</div>
-      <div class="stat-label">Stories Published</div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grad"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Luxury Hospitality · Field Notes</div>
+      <h1>Where <em>Service</em><br>Becomes<br>an Art Form</h1>
+      <p class="hero-sub">Real stories from the front lines of five-star hospitality, written by someone who lives and breathes this industry.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('all-stories').scrollIntoView({behavior:'smooth'})">Read the Stories</button>
+        <button class="btn-ghost" onclick="goPage('about')">About Dhaval</button>
+      </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">5★</div>
-      <div class="stat-label">Forbes Standard</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">3+</div>
-      <div class="stat-label">Years in Luxury Hotels</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">AU & IN</div>
-      <div class="stat-label">Markets Served</div>
+    <div class="hero-scroll-hint">Scroll</div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner" id="ticker-inner"></div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="section" id="featured-section">
+    <div class="section-tag">Featured Stories</div>
+    <div id="featuredArea"></div>
+  </div>
+
+  <!-- PULL QUOTE BANNER -->
+  <div class="pq-banner">
+    <blockquote>"The best service is the kind that makes a guest feel seen without ever making them feel watched."</blockquote>
+    <cite>Dhaval Joshi &nbsp;·&nbsp; The Hospitality Journal</cite>
+  </div>
+
+  <!-- ALL STORIES -->
+  <div class="section" id="all-stories">
+    <div class="section-tag">All Stories</div>
+    <div class="posts-grid" id="postsGrid">
+      <div class="no-posts"><p>No stories yet. Check back soon.</p></div>
     </div>
   </div>
+
+  <!-- SUBSCRIBE SECTION -->
+  <div class="subscribe-section">
+    <div class="subscribe-inner">
+      <div class="subscribe-eyebrow">Stay Connected</div>
+      <h2>Never Miss a <em>Story</em></h2>
+      <p>New posts on hospitality, service craft, and the luxury guest experience. No spam, ever.</p>
+      <form class="subscribe-form" name="subscribe-home" method="POST" data-netlify="true" onsubmit="handleSubscribe(event,'home-success')">
+        <input type="hidden" name="form-name" value="subscribe-home"/>
+        <input type="email" name="email" placeholder="Your email address…" required/>
+        <button type="submit">Subscribe</button>
+      </form>
+      <div id="home-success" class="subscribe-success"><p>You are subscribed. Thank you for following along.</p></div>
+      <p class="subscribe-note">Unsubscribe anytime. No ads, no third parties.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><em>The</em> Hospitality Journal</div>
+      <div class="footer-right">
+        <div class="footer-tag">Stories from the front lines of five-star service</div>
+        <p>© 2025 Dhaval Joshi · Gold Coast, Queensland</p>
+      </div>
+    </div>
+  </footer>
+
 </div>
 
-<!-- FEATURED -->
-<section class="featured-section" id="featured">
-  <div class="section-label reveal">
-    <span>Featured Stories</span>
-  </div>
-  <div id="featuredArea"></div>
-</section>
-
-<!-- PULLQUOTE -->
-<div class="pullquote-section">
-  <div class="pullquote-inner reveal">
-    <blockquote>"Luxury is not about the thread count or the marble lobby. It is about the intention behind every detail — making someone feel, for a moment, that they are the only person in the world."</blockquote>
-    <cite>— Dhaval Joshi · The Hospitality Journal</cite>
-  </div>
-</div>
-
-<!-- ALL POSTS -->
-<section class="posts-section" id="stories">
-  <div class="section-label reveal">
-    <span>All Stories</span>
-  </div>
-  <div id="postsGrid" class="posts-grid"></div>
-  <div id="emptyState" class="empty-state" style="display:none">
-    <div class="empty-box">
-      <p>No stories yet — the first entry is coming soon.</p>
+<!-- ════ PAGE: SINGLE POST ════ -->
+<div class="page" id="page-post">
+  <div class="post-hero" id="postHero">
+    <img id="postHeroImg" src="" alt=""/>
+    <div class="post-hero-overlay"></div>
+    <div class="post-hero-content">
+      <div class="post-hero-tag" id="postHeroTag"></div>
+      <div class="post-hero-title" id="postHeroTitle"></div>
+      <div class="post-hero-meta" id="postHeroMeta"></div>
     </div>
   </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about-section" id="about">
-  <div class="about-bg"></div>
-  <div class="about-overlay"></div>
-  <div class="about-inner">
-    <div class="about-avatar-wrap reveal">
+  <div class="post-body-wrap">
+    <button class="post-back" onclick="goHome()">← Back to Stories</button>
+    <div class="post-content" id="postBody"></div>
+  </div>
+  <div style="background:var(--warm);padding:3rem;text-align:center;border-top:1px solid var(--border)">
+    <p style="font-family:'Bodoni Moda',serif;font-size:1.3rem;font-style:italic;color:var(--ink);margin-bottom:0.5rem">Enjoyed this story?</p>
+    <p style="font-size:0.82rem;color:var(--fog);margin-bottom:1.25rem">Subscribe to get new posts directly in your inbox.</p>
+    <button onclick="openSubPopup()" style="background:var(--ink);color:#fff;border:none;padding:0.8rem 2rem;font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s" onmouseover="this.style.background='var(--g3)'" onmouseout="this.style.background='var(--ink)'">Subscribe Free</button>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><em>The</em> Hospitality Journal</div>
+      <div class="footer-right">
+        <div class="footer-tag">Stories from the front lines of five-star service</div>
+        <p>© 2025 Dhaval Joshi · Gold Coast, Queensland</p>
+      </div>
+    </div>
+  </footer>
+</div>
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80" alt="About"/>
+    <div class="about-hero-overlay"></div>
+    <div class="about-hero-content">
       <div class="about-avatar">DJ</div>
-      <div class="about-creds">
-        <div class="cred">The Langham — Sleep Matters Project</div>
-        <div class="cred">St. Regis-Marriott — Luxury Internship</div>
-        <div class="cred">Meriton Suites, Broadbeach</div>
-        <div class="cred">Griffith University — Sustainable Officer</div>
-        <div class="cred">Griffith University — Masters, Tourism & Hospitality</div>
+      <div class="about-hero-text">
+        <h1>Dhaval <em>Joshi</em></h1>
+        <p>Gold Coast, Queensland · Australia</p>
       </div>
     </div>
-    <div class="about-text reveal reveal-delay-2">
-      <h2>Dhaval <em>Joshi</em></h2>
-      <div class="about-subtitle">Gold Coast, Queensland, Australia</div>
-      <p>I arrived in Australia in 2024 to pursue a Master of International Tourism & Hospitality Management at Griffith University — and found myself working the floors of some of the Gold Coast's finest hotels along the way.</p>
-      <p>This journal is where I document what the hospitality industry looks like from the inside: the quiet craft of a perfectly turned-down room, the guest moments that stay with you, and the standards that separate good service from truly great service.</p>
-    </div>
   </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo"><em>The</em> Hospitality Journal</div>
-  <div class="footer-tagline">Stories from the front lines of five-star service</div>
-  <div class="footer-divider"></div>
-  <p>© 2025 Dhaval Joshi · Gold Coast, Queensland · All experiences are personal reflections.</p>
-</footer>
-
-<!-- LOGIN OVERLAY -->
-<div class="overlay" id="loginOverlay" onclick="overlayClick(event,'loginOverlay')">
-  <div class="login-panel">
-    <div class="login-header">
-      <h3>Admin Access</h3>
-      <button class="panel-close" onclick="closeLogin()">✕</button>
-    </div>
-    <div class="login-body">
-      <p>This area is for Dhaval only. Enter your password to write and manage stories.</p>
-      <div class="field" id="pwField">
-        <label>Password</label>
-        <input type="password" id="pwInput" placeholder="Enter your password…" onkeydown="if(event.key==='Enter')checkLogin()"/>
-        <div class="error-msg" id="pwError">Incorrect password. Please try again.</div>
+  <div class="about-body">
+    <div class="about-sidebar">
+      <div class="about-creds-title">Experience</div>
+      <div class="cred-list">
+        <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">The Langham, Gold Coast<small>Housekeeping &amp; Guest Services</small></div></div>
+        <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">The St. Regis-Marriott<small>Luxury Internship</small></div></div>
+        <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Meriton Suites, Broadbeach<small>Room Service Attendant</small></div></div>
+        <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Griffith University<small>Sustainable Officer</small></div></div>
+        <div class="cred-item"><div class="cred-dot"></div><div class="cred-text">Griffith University<small>Masters — Tourism &amp; Hospitality Management</small></div></div>
       </div>
-      <button class="btn-gold" onclick="checkLogin()">Enter →</button>
+    </div>
+    <div class="about-main">
+      <h2>The story behind the journal</h2>
+      <p>I arrived in Australia in 2024 from Daman, India, to pursue a Master of International Tourism and Hospitality Management at Griffith University on the Gold Coast. What I didn't expect was how quickly this city and this industry would get under my skin.</p>
+      <p>Working in luxury hotel operations while studying full-time has given me a perspective on hospitality that I couldn't have learned in a classroom alone. The craft of great service, the gap between a good hotel and a genuinely great one, the quiet moments that guests carry home with them without quite knowing why — these are things you only understand from the inside.</p>
+      <p>This journal is where I write about all of it. Not the hotels themselves, but the profession. The philosophy of service. What it actually feels like, on both sides of the experience.</p>
+      <p>If you work in this industry or love staying in great hotels, I hope something here resonates with you.</p>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><em>The</em> Hospitality Journal</div>
+      <div class="footer-right">
+        <div class="footer-tag">Stories from the front lines of five-star service</div>
+        <p>© 2025 Dhaval Joshi · Gold Coast, Queensland</p>
+      </div>
+    </div>
+  </footer>
 </div>
 
-<!-- WRITE OVERLAY -->
-<div class="overlay" id="writeOverlay" onclick="overlayClick(event,'writeOverlay')">
-  <div class="write-panel">
-    <div class="panel-header">
-      <h3>Write a New Story</h3>
-      <button class="panel-close" onclick="closeWrite()">✕</button>
+<!-- ════ PAGE: WRITE ════ -->
+<div class="page" id="page-write">
+  <div class="write-page">
+    <div class="write-header">
+      <button class="post-back" style="margin-bottom:1rem;color:rgba(255,255,255,0.45)" onclick="goHome()">← Back</button>
+      <h1>Write a New Story</h1>
+      <p>Write naturally. Format with the toolbar. Publish when ready.</p>
     </div>
-    <div class="panel-body">
-      <p class="hint">Write naturally — like you're telling a friend what happened at work. No formatting needed, just your experience in your own words.</p>
+    <div class="write-body">
+
       <div class="field">
         <label>Post Title *</label>
-        <input type="text" id="fTitle" placeholder="e.g. The guest who changed how I see service…" maxlength="120" oninput="updateChar('fTitle','titleCount',120)"/>
-        <div class="char-count"><span id="titleCount">0</span>/120</div>
+        <input type="text" id="fTitle" placeholder="Give your story a title…" maxlength="120" oninput="document.getElementById('titleCount').textContent=this.value.length"/>
+        <div class="char-hint"><span id="titleCount">0</span>/120</div>
       </div>
+
       <div class="field">
         <label>Category *</label>
         <select id="fCat">
@@ -389,279 +539,689 @@ footer p{font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em}
           <option>Luxury Standards</option>
           <option>Housekeeping</option>
           <option>Sustainable Tourism</option>
-          <option>Leadership & Training</option>
-          <option>F&B Stories</option>
+          <option>Leadership &amp; Training</option>
+          <option>F&amp;B Stories</option>
           <option>Career Reflections</option>
           <option>Internship Moments</option>
         </select>
       </div>
+
       <div class="field">
-        <label>Your Story * — write freely, as much as you like</label>
-        <textarea id="fContent" placeholder="What happened? Who was involved? What did it feel like? What did it teach you?" oninput="updateChar('fContent','contentCount',6000)" maxlength="6000"></textarea>
-        <div class="char-count"><span id="contentCount">0</span>/6000</div>
+        <label>Cover Photo (shown on post card and hero)</label>
+        <div class="cover-upload-area" id="coverArea">
+          <input type="file" id="coverInput" accept="image/*" onchange="handleCoverPhoto(this)"/>
+          <div class="cover-upload-icon">🖼️</div>
+          <strong style="font-size:0.85rem">Click to upload a cover photo</strong>
+          <p>JPG, PNG recommended. Will be resized automatically.</p>
+        </div>
+        <div id="coverPreviewWrap" style="display:none" class="cover-preview-wrap">
+          <img id="coverPreview" src="" alt="Cover"/>
+          <button class="cover-remove" onclick="removeCover()">Remove photo</button>
+        </div>
       </div>
+
       <div class="field">
-        <label>Short Preview (shown on card — optional)</label>
-        <input type="text" id="fSummary" placeholder="One line teaser — auto-generated if blank" maxlength="120" oninput="updateChar('fSummary','summaryCount',120)"/>
-        <div class="char-count"><span id="summaryCount">0</span>/120</div>
+        <label>Your Story *</label>
+        <div class="editor-wrap">
+          <div class="editor-toolbar">
+            <button class="tb-btn" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+            <button class="tb-btn" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+            <button class="tb-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+            <div class="tb-divider"></div>
+            <button class="tb-btn" onclick="fmt('formatBlock','h2')" title="Heading">H2</button>
+            <div class="tb-divider"></div>
+            <button class="tb-btn pq-btn" onclick="insertPullQuote()" title="Pull Quote">❝ Pull Quote</button>
+            <div class="tb-divider"></div>
+            <button class="tb-btn img-btn" onclick="triggerInlinePhoto()" title="Insert Photo">📷 Insert Photo</button>
+            <input type="file" id="inlinePhotoInput" class="hidden-input" accept="image/*" onchange="handleInlinePhoto(this)"/>
+          </div>
+          <div id="editorContent" contenteditable="true" data-placeholder="Start writing your story here…"></div>
+        </div>
       </div>
-      <div class="panel-actions">
-        <button class="btn-cancel" onclick="closeWrite()">Cancel</button>
+
+      <div class="field">
+        <label>Card Preview Text (optional — auto-generated if blank)</label>
+        <input type="text" id="fSummary" placeholder="One line shown on the story card…" maxlength="140" oninput="document.getElementById('summaryCount').textContent=this.value.length"/>
+        <div class="char-hint"><span id="summaryCount">0</span>/140</div>
+      </div>
+
+      <div class="write-actions">
+        <button class="btn-cancel-write" onclick="goHome()">Cancel</button>
         <button class="btn-publish" onclick="publishPost()">Publish Story →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- READ OVERLAY -->
-<div class="overlay" id="readOverlay" onclick="overlayClick(event,'readOverlay')">
-  <div class="read-panel">
-    <div class="read-img">
-      <img id="readImg" src="" alt=""/>
-      <div class="read-img-overlay"></div>
-      <div class="read-img-meta">
-        <div class="read-img-tag" id="readTag"></div>
-        <h2 id="readTitle"></h2>
-      </div>
+<!-- ════ PAGE: ABOUT ════ -->
+<!-- NETLIFY HIDDEN FORM (for static detection) -->
+<form name="subscribe-popup" netlify style="display:none">
+  <input type="hidden" name="form-name" value="subscribe-popup"/>
+  <input type="email" name="email"/>
+</form>
+
+<!-- SUBSCRIBE POPUP -->
+<div class="sub-popup-overlay" id="subPopup" onclick="overlayBg(event,'subPopup')">
+  <div class="sub-popup">
+    <button class="sub-popup-close" onclick="closeSubPopup()">✕</button>
+    <div class="sub-popup-img">
+      <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80" alt=""/>
+      <div class="sub-popup-img-overlay"></div>
+      <div class="sub-popup-img-text">The Hospitality Journal</div>
     </div>
-    <div class="read-body">
-      <div class="read-meta" id="readMeta"></div>
-      <div class="story-text" id="readContent"></div>
+    <div class="sub-popup-body">
+      <h3>Get new <em>stories</em> in your inbox</h3>
+      <p>Join readers who follow Dhaval's reflections on five-star hospitality. One email per post, nothing more.</p>
+      <form class="sub-popup-form" name="subscribe-popup" method="POST" data-netlify="true" onsubmit="handleSubscribe(event,'popup-success-msg')">
+        <input type="hidden" name="form-name" value="subscribe-popup"/>
+        <input type="email" name="email" id="popupEmail" placeholder="Your email address…" required/>
+        <button type="submit">Subscribe Free</button>
+      </form>
+      <div id="popup-success-msg" style="display:none;text-align:center;padding:0.5rem 0">
+        <p style="font-family:'Cormorant',serif;font-style:italic;color:var(--g);font-size:1.05rem">You are subscribed. Welcome.</p>
+      </div>
+      <p class="popup-skip" onclick="closeSubPopup()">No thanks, I'll just read</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-bubble" id="chatWidget">
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <div class="chat-avatar">DJ</div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">Hospitality Journal Bot</div>
+        <div class="chat-header-status">Online — ask me anything</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-suggestions" id="chatSuggestions"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="chat-send-btn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+  <button class="chat-bubble-btn" id="chatBubbleBtn" onclick="toggleChat()" title="Chat with us">
+    <span id="chatBubbleIcon">💬</span>
+    <div class="chat-notif" id="chatNotif">1</div>
+  </button>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="loginOverlay" onclick="overlayBg(event,'loginOverlay')">
+  <div class="login-box">
+    <div class="login-box-header">
+      <h3>Admin Access</h3>
+      <button class="overlay-close" onclick="closeLogin()">✕</button>
+    </div>
+    <div class="login-box-body">
+      <p>This section is for Dhaval only. Visitors can read all stories freely.</p>
+      <div class="login-field" id="pwField">
+        <label>Password</label>
+        <input type="password" id="pwInput" placeholder="Enter your password…" onkeydown="if(event.key==='Enter')checkLogin()"/>
+        <div class="err-msg" id="pwErr">Incorrect password. Please try again.</div>
+      </div>
+      <button class="btn-login" onclick="checkLogin()">Enter →</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const STORAGE_KEY='dhaval_blog_v4';
-const SESSION_KEY='dhaval_admin';
-const ADMIN_PASSWORD='Langham2025';
+/* ─── SUPABASE ─── */
+const { createClient } = supabase;
+const db = createClient(
+  'https://jjkpfkwsminxzvgykjwy.supabase.co',
+  'sb_publishable_vNJLsZ1LmHlt1fK8iWaEsg_HZARWaNA'
+);
 
-const CARD_PHOTOS=[
-  'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80',
-  'https://images.unsplash.com/photo-1615460549969-36fa19521a4f?w=700&q=80',
-  'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=80',
-  'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80',
-  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700&q=80',
-  'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=700&q=80',
-  'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=700&q=80',
-  'https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?w=700&q=80',
+/* ─── CONSTANTS ─── */
+const SESS = 'dhj_admin';
+const PASS = 'Langham2025';
+
+const STOCK = [
+  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=80',
+  'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80',
+  'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=900&q=80',
+  'https://images.unsplash.com/photo-1615460549969-36fa19521a4f?w=900&q=80',
+  'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=80',
+  'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=900&q=80',
+  'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80',
+  'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80',
 ];
 
-function isAdmin(){return sessionStorage.getItem(SESSION_KEY)==='yes'}
-function getPosts(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
-function savePosts(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+const TICKER_WORDS = ['Guest Experience','Five Star Service','Turndown Rituals','Luxury Hospitality','Forbes Standards','Room Service','The Art of Care','Anticipatory Service','Human Connection','Gold Coast','Dhaval Joshi','The Hospitality Journal'];
 
-function setAdminUI(on){
-  document.getElementById('adminBtn').style.display=on?'inline-block':'none';
-  document.getElementById('logoutBtn').style.display=on?'inline-block':'none';
-  document.getElementById('lockIcon').style.display=on?'none':'inline-block';
-  on?document.body.classList.add('admin-mode'):document.body.classList.remove('admin-mode');
+let coverData = null;
+let currentPage = 'home';
+let postsCache = [];
+
+/* ─── SUPABASE DATA FUNCTIONS ─── */
+function isAdmin(){ return sessionStorage.getItem(SESS)==='yes' }
+
+async function loadPosts(){
+  showLoading(true);
+  try {
+    const { data, error } = await db.from('posts').select('*').order('date',{ascending:false});
+    if(error) throw error;
+    postsCache = data || [];
+  } catch(e) {
+    console.error('Error loading posts:',e);
+    postsCache = [];
+  }
+  showLoading(false);
+  return postsCache;
 }
 
-function renderPosts(){
-  const posts=getPosts();
-  document.getElementById('statPosts').textContent=posts.length;
-  const grid=document.getElementById('postsGrid');
-  const empty=document.getElementById('emptyState');
-  const featuredArea=document.getElementById('featuredArea');
+async function savePostToDB(post){
+  const { error } = await db.from('posts').insert([post]);
+  if(error) throw error;
+}
 
+async function deletePostFromDB(id){
+  const { error } = await db.from('posts').delete().eq('id', id);
+  if(error) throw error;
+}
+
+function showLoading(on){
+  document.getElementById('loadingBar').style.opacity = on ? '1' : '0';
+}
+
+/* ─── NAVIGATION ─── */
+function showPage(id, navStyle){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const nav = document.getElementById('mainNav');
+  nav.className = navStyle==='light'?'light':'dark';
+  window.scrollTo(0,0);
+  currentPage = id;
+}
+
+async function goHome(){
+  showPage('home','dark');
+  await loadPosts();
+  renderHome();
+}
+function goPage(p){
+  if(p==='about') showPage('about','dark');
+}
+function goWrite(){
+  if(!isAdmin()){openLogin();return}
+  showPage('write','light');
+}
+function goPost(index){
+  const p = postsCache[index];
+  if(!p) return;
+  const img = p.cover || STOCK[index % STOCK.length];
+  document.getElementById('postHeroImg').src = img;
+  document.getElementById('postHeroTag').textContent = p.category;
+  document.getElementById('postHeroTitle').textContent = p.title;
+  const date = new Date(p.date).toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+  const mins = Math.max(1, Math.ceil(p.content.replace(/<[^>]*>/g,'').split(' ').length/200));
+  document.getElementById('postHeroMeta').innerHTML =
+    `<span>${date}</span><span style="opacity:0.3">|</span><span>${mins} min read</span><span style="opacity:0.3">|</span><span>Dhaval Joshi</span>`;
+  document.getElementById('postBody').innerHTML = p.content;
+  showPage('post','dark');
+}
+
+/* ─── RENDER HOME ─── */
+function renderHome(){
+  const posts = postsCache;
+
+  // Featured
+  const fa = document.getElementById('featuredArea');
   if(posts.length===0){
-    empty.style.display='block';
-    grid.innerHTML='';
-    featuredArea.innerHTML='<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:var(--muted);text-align:center;padding:3rem 0">Stories coming soon...</p>';
-    return;
-  }
-  empty.style.display='none';
-
-  // Featured — first 3 posts
-  const featured=posts.slice(0,3);
-  const fp=featured[0];
-  const fp_photo=CARD_PHOTOS[0];
-  const side1=featured[1];
-  const side2=featured[2];
-  featuredArea.innerHTML=`
-    <div class="featured-grid reveal">
-      <div class="featured-main" onclick="openRead(0)">
-        <img src="${fp_photo}" alt="${esc(fp.title)}" loading="lazy"/>
-        <div class="featured-main-overlay"></div>
-        <div class="featured-main-body">
-          <div class="featured-badge">${esc(fp.category)}</div>
+    fa.innerHTML='<p style="font-family:\'Cormorant\',serif;font-style:italic;color:#ccc;text-align:center;padding:3rem 0;font-size:1.1rem">Your first story will appear here.</p>';
+  } else {
+    const fp = posts[0];
+    const sp1 = posts[1];
+    const sp2 = posts[2];
+    const stripHtml = s => s.replace(/<[^>]*>/g,'');
+    fa.innerHTML=`<div class="featured-block">
+      <div class="feat-main" onclick="goPost(0)">
+        <img src="${fp.cover||STOCK[0]}" alt="${esc(fp.title)}" loading="lazy"/>
+        <div class="feat-main-overlay"></div>
+        <div class="feat-main-body">
+          <div class="feat-tag">${esc(fp.category)}</div>
           <h2>${esc(fp.title)}</h2>
-          <p>${esc(fp.summary||fp.content.slice(0,120)+'…')}</p>
-          <span class="read-link">Read Story →</span>
+          <div class="feat-excerpt">${esc(fp.summary||stripHtml(fp.content).slice(0,160))}</div>
+          <div class="feat-readmore">Read Story →</div>
         </div>
       </div>
-      <div class="featured-side">
-        ${side1?`<div class="side-card" onclick="openRead(1)">
-          <img src="${CARD_PHOTOS[1]}" alt="${esc(side1.title)}" loading="lazy"/>
-          <div class="side-card-overlay"></div>
-          <div class="side-card-body">
-            <div class="side-tag">${esc(side1.category)}</div>
-            <h3>${esc(side1.title)}</h3>
+      <div class="feat-side">
+        ${sp1?`<div class="feat-side-card" onclick="goPost(1)">
+          <img src="${sp1.cover||STOCK[1]}" alt="${esc(sp1.title)}" loading="lazy"/>
+          <div class="feat-side-overlay"></div>
+          <div class="feat-side-body">
+            <div class="feat-side-tag">${esc(sp1.category)}</div>
+            <h3>${esc(sp1.title)}</h3>
           </div>
-        </div>`:`<div class="side-card" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.15);font-family:\'Cormorant Garamond\',serif;font-style:italic">More stories coming…</span></div>`}
-        ${side2?`<div class="side-card" onclick="openRead(2)">
-          <img src="${CARD_PHOTOS[2]}" alt="${esc(side2.title)}" loading="lazy"/>
-          <div class="side-card-overlay"></div>
-          <div class="side-card-body">
-            <div class="side-tag">${esc(side2.category)}</div>
-            <h3>${esc(side2.title)}</h3>
+        </div>`:`<div class="feat-placeholder"><span>More stories soon…</span></div>`}
+        ${sp2?`<div class="feat-side-card" onclick="goPost(2)">
+          <img src="${sp2.cover||STOCK[2]}" alt="${esc(sp2.title)}" loading="lazy"/>
+          <div class="feat-side-overlay"></div>
+          <div class="feat-side-body">
+            <div class="feat-side-tag">${esc(sp2.category)}</div>
+            <h3>${esc(sp2.title)}</h3>
           </div>
-        </div>`:`<div class="side-card" style="background:#111;display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.1);font-family:\'Cormorant Garamond\',serif;font-style:italic">More stories coming…</span></div>`}
+        </div>`:`<div class="feat-placeholder"><span>More stories soon…</span></div>`}
       </div>
     </div>`;
+  }
 
-  // All posts grid
-  grid.innerHTML=posts.map((p,i)=>{
-    const photo=CARD_PHOTOS[i%CARD_PHOTOS.length];
-    const summary=p.summary||p.content.slice(0,100)+(p.content.length>100?'…':'');
-    const date=new Date(p.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
-    const mins=Math.max(1,Math.ceil(p.content.split(' ').length/200));
-    return`<div class="post-card reveal reveal-delay-${(i%3)+1}" onclick="openRead(${i})">
+  // Grid
+  const grid = document.getElementById('postsGrid');
+  if(posts.length===0){
+    grid.innerHTML='<div class="no-posts"><p>No stories yet. Check back soon.</p></div>';
+    return;
+  }
+  const stripHtml = s => s.replace(/<[^>]*>/g,'');
+  grid.innerHTML = posts.map((p,i)=>{
+    const img = p.cover || STOCK[i%STOCK.length];
+    const summary = p.summary || stripHtml(p.content).slice(0,120)+(stripHtml(p.content).length>120?'…':'');
+    const date = new Date(p.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    const mins = Math.max(1,Math.ceil(stripHtml(p.content).split(' ').length/200));
+    return `<div class="post-card" onclick="goPost(${i})">
       <div class="post-card-img">
-        <img src="${photo}" alt="${esc(p.title)}" loading="lazy"/>
+        <img src="${img}" alt="${esc(p.title)}" loading="lazy"/>
         <div class="post-card-img-overlay"></div>
-        <div class="post-card-tag-img">${esc(p.category)}</div>
+        <div class="card-tag">${esc(p.category)}</div>
       </div>
       <div class="post-card-body">
         <h3>${esc(p.title)}</h3>
         <p>${esc(summary)}</p>
-        <div class="post-card-footer">
-          <span>${date} · ${mins} min read</span>
-          <button class="delete-btn" onclick="deletePost(event,${i})" title="Delete">✕</button>
+        <div class="post-card-meta">
+          <span>${date} &nbsp;·&nbsp; ${mins} min read</span>
+          <button class="delete-btn" onclick="deletePost(event,'${p.id}')">✕ Delete</button>
         </div>
       </div>
     </div>`;
   }).join('');
-  initReveal();
 }
 
-function openRead(index){
-  const posts=getPosts();
-  const p=posts[index];
-  if(!p)return;
-  const date=new Date(p.date).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const mins=Math.max(1,Math.ceil(p.content.split(' ').length/200));
-  const photo=CARD_PHOTOS[index%CARD_PHOTOS.length];
-  document.getElementById('readImg').src=photo;
-  document.getElementById('readImg').alt=p.title;
-  document.getElementById('readTag').textContent=p.category;
-  document.getElementById('readTitle').textContent=p.title;
-  document.getElementById('readMeta').innerHTML=`<span>${date}</span><span class="read-meta-dot">◆</span><span>${mins} min read</span><span class="read-meta-dot">◆</span><span>Dhaval Joshi</span>`;
-  document.getElementById('readContent').textContent=p.content;
-  document.getElementById('readOverlay').classList.add('active');
+/* ─── TICKER ─── */
+function buildTicker(){
+  const words = [...TICKER_WORDS,...TICKER_WORDS];
+  document.getElementById('ticker-inner').innerHTML = words.map(w=>`<span class="ticker-item">${w}</span>`).join('');
 }
-function closeRead(){document.getElementById('readOverlay').classList.remove('active')}
 
+/* ─── ADMIN ─── */
+function setAdminUI(on){
+  document.getElementById('adminBtn').style.display = on?'inline-block':'none';
+  document.getElementById('logoutBtn').style.display = on?'inline-block':'none';
+  document.getElementById('lockBtn').style.display  = on?'none':'flex';
+  on?document.body.classList.add('admin-mode'):document.body.classList.remove('admin-mode');
+}
+function doLogout(){
+  sessionStorage.removeItem(SESS);
+  setAdminUI(false);
+  goHome();
+  toast('Logged out.');
+}
 function openLogin(){
   document.getElementById('pwInput').value='';
-  document.getElementById('pwError').style.display='none';
+  document.getElementById('pwErr').style.display='none';
   document.getElementById('pwField').classList.remove('error');
   document.getElementById('loginOverlay').classList.add('active');
-  setTimeout(()=>document.getElementById('pwInput').focus(),100);
+  setTimeout(()=>document.getElementById('pwInput').focus(),120);
 }
-function closeLogin(){document.getElementById('loginOverlay').classList.remove('active')}
-
-function checkLogin(){
-  if(document.getElementById('pwInput').value===ADMIN_PASSWORD){
-    sessionStorage.setItem(SESSION_KEY,'yes');
+function closeLogin(){ document.getElementById('loginOverlay').classList.remove('active') }
+function overlayBg(e,id){ if(e.target.id===id) document.getElementById(id).classList.remove('active') }
+async function checkLogin(){
+  if(document.getElementById('pwInput').value===PASS){
+    sessionStorage.setItem(SESS,'yes');
     setAdminUI(true);
     closeLogin();
-    renderPosts();
-    showToast('Welcome back, Dhaval!');
-  }else{
-    document.getElementById('pwError').style.display='block';
+    await loadPosts();
+    renderHome();
+    toast('Welcome back, Dhaval!');
+  } else {
+    document.getElementById('pwErr').style.display='block';
     document.getElementById('pwField').classList.add('error');
     document.getElementById('pwInput').value='';
     document.getElementById('pwInput').focus();
   }
 }
 
-function logout(){
-  sessionStorage.removeItem(SESSION_KEY);
-  setAdminUI(false);
-  renderPosts();
-  showToast('Logged out successfully.');
+/* ─── EDITOR ─── */
+function fmt(cmd, val){
+  document.getElementById('editorContent').focus();
+  document.execCommand(cmd, false, val||null);
 }
 
-function openWrite(){
-  if(!isAdmin()){openLogin();return}
-  document.getElementById('writeOverlay').classList.add('active');
-  setTimeout(()=>document.getElementById('fTitle').focus(),100);
+function insertPullQuote(){
+  const editor = document.getElementById('editorContent');
+  editor.focus();
+  const sel = window.getSelection();
+  const text = sel.toString().trim();
+  if(text){
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const bq = document.createElement('blockquote');
+    bq.className = 'pull-quote';
+    bq.textContent = text;
+    range.insertNode(bq);
+    const p = document.createElement('p');
+    p.innerHTML = '<br>';
+    bq.after(p);
+    const r2 = document.createRange();
+    r2.setStart(p,0);
+    sel.removeAllRanges();
+    sel.addRange(r2);
+  } else {
+    document.execCommand('insertHTML',false,'<blockquote class="pull-quote">Type your pull quote here</blockquote><p><br></p>');
+  }
 }
-function closeWrite(){document.getElementById('writeOverlay').classList.remove('active')}
 
-function overlayClick(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('active')}
-
-function deletePost(e,i){
-  if(!isAdmin())return;
-  e.stopPropagation();
-  if(!confirm('Delete this story? This cannot be undone.'))return;
-  const posts=getPosts();
-  posts.splice(i,1);
-  savePosts(posts);
-  renderPosts();
-  showToast('Story deleted.');
+function triggerInlinePhoto(){
+  document.getElementById('inlinePhotoInput').click();
 }
 
-function publishPost(){
-  const title=document.getElementById('fTitle').value.trim();
-  const cat=document.getElementById('fCat').value;
-  const content=document.getElementById('fContent').value.trim();
-  const summary=document.getElementById('fSummary').value.trim();
+function handleInlinePhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      const maxW = 900;
+      let w=img.width, h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const src = canvas.toDataURL('image/jpeg',0.78);
+      document.getElementById('editorContent').focus();
+      document.execCommand('insertHTML',false,`<img src="${src}" style="max-width:100%;border-radius:4px;margin:1.5rem 0;display:block"/><p><br></p>`);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+
+/* ─── COVER PHOTO ─── */
+function handleCoverPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      const maxW = 1200;
+      let w=img.width, h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      coverData = canvas.toDataURL('image/jpeg',0.82);
+      document.getElementById('coverArea').style.display='none';
+      document.getElementById('coverPreview').src=coverData;
+      document.getElementById('coverPreviewWrap').style.display='block';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+function removeCover(){
+  coverData=null;
+  document.getElementById('coverArea').style.display='block';
+  document.getElementById('coverPreviewWrap').style.display='none';
+  document.getElementById('coverPreview').src='';
+}
+
+/* ─── PUBLISH ─── */
+async function publishPost(){
+  const title   = document.getElementById('fTitle').value.trim();
+  const cat     = document.getElementById('fCat').value;
+  const content = document.getElementById('editorContent').innerHTML.trim();
+  const summary = document.getElementById('fSummary').value.trim();
+  const textOnly = content.replace(/<[^>]*>/g,'').trim();
+
   if(!title){alert('Please add a title.');document.getElementById('fTitle').focus();return}
   if(!cat){alert('Please choose a category.');document.getElementById('fCat').focus();return}
-  if(!content){alert('Please write your story.');document.getElementById('fContent').focus();return}
-  const posts=getPosts();
-  posts.unshift({title,category:cat,content,summary,date:new Date().toISOString()});
-  savePosts(posts);
-  renderPosts();
-  ['fTitle','fContent','fSummary'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fCat').value='';
-  ['titleCount','contentCount','summaryCount'].forEach(id=>document.getElementById(id).textContent='0');
-  closeWrite();
-  showToast('Story published!');
-  document.getElementById('stories').scrollIntoView({behavior:'smooth'});
+  if(!textOnly){alert('Please write your story.');document.getElementById('editorContent').focus();return}
+
+  const btn = document.querySelector('.btn-publish');
+  btn.textContent = 'Publishing…';
+  btn.disabled = true;
+
+  try {
+    await savePostToDB({title, category:cat, content, summary: summary||null, cover: coverData||null});
+    document.getElementById('fTitle').value='';
+    document.getElementById('fCat').value='';
+    document.getElementById('editorContent').innerHTML='';
+    document.getElementById('fSummary').value='';
+    ['titleCount','summaryCount'].forEach(id=>document.getElementById(id).textContent='0');
+    removeCover();
+    await goHome();
+    toast('Story published! Everyone can now see it.');
+  } catch(e) {
+    console.error(e);
+    toast('Error publishing. Please try again.');
+  }
+
+  btn.textContent = 'Publish Story →';
+  btn.disabled = false;
 }
 
-function updateChar(inputId,countId,max){
-  const val=document.getElementById(inputId).value.length;
-  const el=document.getElementById(countId);
-  el.textContent=val;
-  el.style.color=val>max*0.9?'#e24b4a':'var(--muted)';
+/* ─── DELETE ─── */
+async function deletePost(e, id){
+  e.stopPropagation();
+  if(!isAdmin()) return;
+  if(!confirm('Delete this story permanently?')) return;
+  try {
+    await deletePostFromDB(id);
+    await loadPosts();
+    renderHome();
+    toast('Story deleted.');
+  } catch(err) {
+    toast('Error deleting. Please try again.');
+  }
 }
 
-function showToast(msg){
+/* ─── HELPERS ─── */
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function toast(msg){
   const t=document.getElementById('toast');
   t.textContent='✦ '+msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-// Scroll animations
-function initReveal(){
-  const els=document.querySelectorAll('.reveal:not(.visible)');
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
-  },{threshold:0.12});
-  els.forEach(el=>obs.observe(el));
-}
-
-// Navbar scroll
+/* ─── NAV SCROLL ─── */
 window.addEventListener('scroll',()=>{
-  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+  if(currentPage==='home'){
+    const nav=document.getElementById('mainNav');
+    if(window.scrollY>80){ nav.className='light'; }
+    else{ nav.className='dark'; }
+  }
 });
+
+
+/* ─── SUBSCRIBE ─── */
+function handleSubscribe(e, successId){
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(data).toString()})
+    .then(()=>{ form.style.display='none'; document.getElementById(successId).style.display='block'; sessionStorage.setItem('subscribed','yes'); })
+    .catch(()=>{ form.style.display='none'; document.getElementById(successId).style.display='block'; });
+}
+
+/* ─── SUBSCRIBE POPUP ─── */
+let popupShown = false;
+function openSubPopup(){
+  if(sessionStorage.getItem('subscribed')) return;
+  document.getElementById('subPopup').classList.add('active');
+  popupShown = true;
+}
+function closeSubPopup(){ document.getElementById('subPopup').classList.remove('active') }
+
+// Auto-show popup after 30s if not subscribed
+setTimeout(()=>{
+  if(!popupShown && !sessionStorage.getItem('subscribed') && !sessionStorage.getItem('popupDismissed')) openSubPopup();
+}, 30000);
+
+// Override closeSubPopup to record dismissal
+const _origClose = closeSubPopup;
+function closeSubPopup(){
+  document.getElementById('subPopup').classList.remove('active');
+  sessionStorage.setItem('popupDismissed','yes');
+}
+
+/* ─── CHATBOT ─── */
+let chatOpen = false;
+let chatInitialised = false;
+
+const BOT_KNOWLEDGE = [
+  { keys:['hello','hi','hey','good morning','good evening','howdy','greet','sup'],
+    reply:["Hello! Welcome to The Hospitality Journal. I'm here to help you explore Dhaval's stories or answer any questions about the blog and hospitality. What would you like to know?","Hi there! Great to have you here. You can ask me about the blog, about Dhaval, or anything to do with luxury hospitality."] },
+  { keys:['who is dhaval','about dhaval','who writes','who made','author','who are you','about you','about this'],
+    reply:["Dhaval Joshi is a hospitality professional from Daman, India, now based in Gold Coast, Australia. He is completing a Master of International Tourism and Hospitality Management at Griffith University while working in luxury hotel operations. He created this journal to share his honest reflections on the craft of service."] },
+  { keys:['what is this blog','what is this','what do you write','topics','categories','what about'],
+    reply:["The Hospitality Journal is Dhaval's personal space to write about the art and philosophy of hospitality service. You will find stories on guest experience, luxury standards, housekeeping, room service, sustainable tourism, career reflections, and what it truly feels like to work in and stay at five-star properties."] },
+  { keys:['subscribe','notification','email','notify','alert','new post','updates'],
+    reply:["You can subscribe using the form at the bottom of the homepage or click the Subscribe button after any story. You will get an email each time a new post goes live. No spam, just stories.","Just scroll to the bottom of the homepage — there is a subscription form there. Enter your email and you will be notified every time Dhaval publishes a new story."] },
+  { keys:['five star','5 star','forbes','luxury','standard','what makes'],
+    reply:["Great question. Five-star service is not really about the physical product — any hotel above a certain price point can have marble lobbies and fine linen. What separates truly great hotels is anticipatory service: knowing what a guest needs before they ask. It is about memory, observation, and genuine human care.","Forbes Five-Star is less about what you see and more about what you feel. The best hotels make guests feel genuinely looked after — not processed efficiently, but actually cared for. That is the standard Dhaval writes about."] },
+  { keys:['langham','meriton','st regis','marriott','experience','worked','property','hotel','hotels'],
+    reply:["Dhaval has worked in housekeeping and guest services at the Langham Gold Coast and Meriton Suites Broadbeach, and completed a luxury internship at the St. Regis-Marriott. These experiences across different tiers of luxury hospitality are what inform his writing."] },
+  { keys:['australia','gold coast','griffith','university','study','studying','masters','student'],
+    reply:["Dhaval moved to Australia in 2024 from India to pursue his Masters in International Tourism and Hospitality Management at Griffith University on the Gold Coast. He has been balancing full-time study with hotel work, which gives him a unique perspective on the industry."] },
+  { keys:['india','daman','where from','home','originally'],
+    reply:["Dhaval is originally from Daman, India. He moved to Gold Coast, Australia in 2024 to pursue his postgraduate studies in hospitality management at Griffith University."] },
+  { keys:['turndown','turndown service','sleep','pillow','evening'],
+    reply:["Turndown service is one of Dhaval's favourite topics. It is one of the most intimate acts of hospitality — entering a guest's room, dimming the lights, preparing it for sleep. When done with genuine attention it transforms a hotel room into something that feels genuinely personal."] },
+  { keys:['housekeeping','cleaning','room attendant','clean'],
+    reply:["Dhaval has written about why housekeeping is the true heart of every hotel. Nobody notices a perfectly made room — and that invisibility is exactly the point. Great housekeeping is craft, not cleaning."] },
+  { keys:['sustainable','sustainability','green','environment','eco'],
+    reply:["Sustainability is one of the topics Dhaval covers on the blog. He served as a Sustainable Officer at Griffith University and brings that lens to his hospitality writing — how luxury and environmental responsibility can and should coexist."] },
+  { keys:['contact','reach','email dhaval','get in touch','message','connect'],
+    reply:["This blog is Dhaval's personal journal — the best way to connect is by subscribing and leaving your thoughts via the subscription form. He reads every message."] },
+  { keys:['latest','recent','newest','new post','last post','what did you write'],
+    reply: () => {
+      const posts = postsCache;
+      if(posts.length===0) return "There are no stories published yet, but the first one is coming very soon. Subscribe so you do not miss it.";
+      const latest = posts[0];
+      return `The latest story is "${latest.title}" in the ${latest.category} category. Click it on the homepage to read the full piece.`;
+    }},
+  { keys:['how many','posts','stories','count'],
+    reply: () => {
+      const posts = postsCache;
+      if(posts.length===0) return "No stories have been published yet. The first one is on its way.";
+      return `There ${posts.length===1?'is':'are'} currently ${posts.length} ${posts.length===1?'story':'stories'} published on the blog. More are on the way.`;
+    }},
+  { keys:['good','great','love','amazing','nice','beautiful','brilliant','fantastic','wonderful'],
+    reply:["Thank you so much! That means a lot. If you enjoy the blog, subscribing is the best way to keep up with new stories.","Really glad to hear that! Dhaval puts genuine care into every piece he writes."] },
+  { keys:['bye','goodbye','see you','later','thanks','thank you','cheers'],
+    reply:["Thanks for stopping by! Come back soon for new stories, and consider subscribing so you never miss one.","Take care! And if you have not yet subscribed, you can do so at the bottom of the homepage."] },
+];
+
+const SUGGESTIONS = ['Who is Dhaval?','What topics are covered?','How do I subscribe?','Latest post?','What is five-star service?'];
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  const panel = document.getElementById('chatPanel');
+  const icon  = document.getElementById('chatBubbleIcon');
+  const notif = document.getElementById('chatNotif');
+  panel.classList.toggle('open', chatOpen);
+  icon.textContent = chatOpen ? '✕' : '💬';
+  notif.style.display = 'none';
+  if(chatOpen && !chatInitialised) initChat();
+}
+
+function initChat(){
+  chatInitialised = true;
+  addBotMsg("Hello! I am the Hospitality Journal assistant. Ask me anything about the blog, Dhaval's background, or hospitality in general.", ()=>{
+    renderSuggestions(SUGGESTIONS);
+  });
+}
+
+function renderSuggestions(items){
+  const el = document.getElementById('chatSuggestions');
+  el.innerHTML = items.map(s=>`<div class="chat-suggestion" onclick="useSuggestion('${s}')">${s}</div>`).join('');
+}
+
+function useSuggestion(text){
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+function sendChat(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  document.getElementById('chatSuggestions').innerHTML = '';
+  addUserMsg(text);
+  showTyping();
+  setTimeout(()=>{
+    removeTyping();
+    const reply = getBotReply(text);
+    addBotMsg(reply);
+  }, 900 + Math.random()*400);
+}
+
+function getBotReply(text){
+  const lower = text.toLowerCase();
+  for(const item of BOT_KNOWLEDGE){
+    if(item.keys.some(k=>lower.includes(k))){
+      const r = item.reply;
+      if(typeof r === 'function') return r();
+      return Array.isArray(r) ? r[Math.floor(Math.random()*r.length)] : r;
+    }
+  }
+  return "That is a great question! This blog focuses on hospitality, five-star service, and Dhaval's professional journey. Try asking me about a specific topic — guest experience, luxury standards, or how to subscribe, for example.";
+}
+
+function addBotMsg(text, callback){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.innerHTML = `<div class="chat-msg-avatar">DJ</div><div class="chat-bubble-msg">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  if(callback) setTimeout(callback, 300);
+}
+
+function addUserMsg(text){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.innerHTML = `<div class="chat-bubble-msg">${esc(text)}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping(){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="chat-msg-avatar">DJ</div><div class="chat-typing"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping(){
+  const el = document.getElementById('typingIndicator');
+  if(el) el.remove();
+}
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeWrite();closeRead();closeLogin();}
+  if(e.key==='Escape') closeLogin();
 });
 
+/* ─── INIT ─── */
+buildTicker();
 setAdminUI(isAdmin());
-renderPosts();
-initReveal();
+loadPosts().then(()=>renderHome());
 </script>
 </body>
 </html>
