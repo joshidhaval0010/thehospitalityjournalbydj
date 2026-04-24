@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>The Hospitality Journal , Dhaval Joshi</title>
+<title>The Hospitality Journal by Dhaval Joshi</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400;1,6..96,700&family=Outfit:wght@300;400;500;600&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -55,7 +55,7 @@ nav.light #lockBtn:hover{border-color:var(--g3);color:var(--g3)}
 
 /* ─── HOME HERO ─── */
 .hero{height:100vh;min-height:620px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:var(--ink)}
-.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1800&q=80');background-size:cover;background-position:center;opacity:0.45;animation:bgZoom 10s ease forwards}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1800&q=85');background-size:cover;background-position:center;opacity:0.48;animation:bgZoom 10s ease forwards;transition:opacity 1.2s ease,background-image 1.2s ease}
 @keyframes bgZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
 .hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,1) 0%,rgba(13,13,13,0.4) 50%,rgba(13,13,13,0.1) 100%)}
 .hero-content{position:relative;z-index:2;padding:0 3rem 5rem;max-width:900px}
@@ -63,6 +63,7 @@ nav.light #lockBtn:hover{border-color:var(--g3);color:var(--g3)}
 .hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--g)}
 .hero h1{font-family:'Bodoni Moda',serif;font-size:clamp(3.5rem,7vw,6.5rem);font-weight:900;line-height:0.95;color:#fff;margin-bottom:1.75rem;opacity:0;animation:slideUp 1s ease 0.6s forwards}
 .hero h1 em{font-style:italic;color:var(--g)}
+.hero-byline{font-family:'Cormorant',serif;font-size:1.35rem;font-style:italic;color:var(--g2);margin:-0.9rem 0 1.25rem 0;opacity:0;animation:slideUp 1s ease 0.7s forwards}
 .hero-sub{font-family:'Cormorant',serif;font-size:1.15rem;font-style:italic;color:rgba(255,255,255,0.6);margin-bottom:2.5rem;max-width:480px;line-height:1.7;opacity:0;animation:slideUp 1s ease 0.8s forwards}
 .hero-actions{display:flex;gap:1rem;opacity:0;animation:slideUp 1s ease 1s forwards}
 .btn-primary{background:var(--g);color:var(--ink);font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;padding:0.85rem 2rem;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;border-radius:2px}
@@ -299,10 +300,10 @@ input[type=file].hidden-input{display:none}
 
 /* ─── CHAT WIDGET ─── */
 .chat-bubble{position:fixed;bottom:2rem;right:2rem;z-index:700;display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem}
-.chat-bubble-btn{width:58px;height:58px;background:var(--g);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 8px 32px rgba(196,162,101,0.4);transition:all 0.3s;position:relative}
+.chat-bubble-btn{width:58px;height:58px;background:linear-gradient(135deg,var(--g),var(--g2));border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 8px 32px rgba(196,162,101,0.4);transition:all 0.3s;position:relative}
 .chat-bubble-btn:hover{transform:scale(1.08);box-shadow:0 12px 40px rgba(196,162,101,0.55)}
 .chat-notif{position:absolute;top:-3px;right:-3px;width:18px;height:18px;background:#E74C3C;border-radius:50%;border:2px solid var(--page);display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#fff;font-weight:700;font-family:'Outfit',sans-serif}
-.chat-panel{position:fixed;bottom:6.5rem;right:2rem;width:360px;background:#fff;border-radius:16px;box-shadow:0 20px 80px rgba(0,0,0,0.2);z-index:700;overflow:hidden;display:none;flex-direction:column;max-height:520px;animation:chatSlideUp 0.3s ease}
+.chat-panel{position:fixed;bottom:6.5rem;right:2rem;width:380px;background:#fff;border-radius:16px;box-shadow:0 20px 80px rgba(0,0,0,0.2);z-index:700;overflow:hidden;display:none;flex-direction:column;max-height:560px;animation:chatSlideUp 0.3s ease;border:1px solid rgba(196,162,101,0.18)}
 .chat-panel.open{display:flex}
 @keyframes chatSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .chat-header{background:var(--ink);padding:1rem 1.25rem;display:flex;align-items:center;gap:0.85rem}
@@ -347,7 +348,7 @@ input[type=file].hidden-input{display:none}
 .gallery-item:nth-child(1){grid-column:1/3;grid-row:1/3}
 .gallery-item:nth-child(4){grid-column:3/5;grid-row:2/4}
 .gallery-item:nth-child(7){grid-column:1/3;grid-row:3/5}
-.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s ease;min-height:180px}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s ease,opacity 0.6s ease;min-height:180px}
 .gallery-item:nth-child(1) img,.gallery-item:nth-child(4) img,.gallery-item:nth-child(7) img{min-height:360px}
 .gallery-item:hover img{transform:scale(1.07)}
 .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);opacity:0;transition:opacity 0.4s ease}
@@ -490,7 +491,7 @@ input[type=file].hidden-input{display:none}
     <div class="gallery-inner">
       <div class="gallery-header">
         <h2>The World of<br><em>Luxury Hospitality</em></h2>
-        <p>A visual journey through the spaces, moments and details that define five-star service.</p>
+        <p>A curated study of the spaces, rituals and details that define modern luxury hospitality.</p>
       </div>
       <div class="gallery-grid" id="aiGallery">
         <!-- AI images injected by JS -->
@@ -1286,7 +1287,7 @@ function toggleChat(){
 
 function initChat(){
   chatInitialised = true;
-  addBotMsg("Hello! I am the Hospitality Journal assistant. Ask me anything about the blog, Dhaval's background, or hospitality in general.", ()=>{
+  addBotMsg("Hello! I am the Hospitality Journal assistant. Guided website concierge about the blog, Dhaval's background, or hospitality in general.", ()=>{
     renderSuggestions(SUGGESTIONS);
   });
 }
@@ -1493,7 +1494,97 @@ buildAIGallery();
 renderDocs();
 setAdminUI(isAdmin());
 loadPosts().then(()=>renderHome());
+
+
+/* ─── MODERN LUXURY ROTATION UPGRADE ─── */
+const heroVisuals = [
+  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1800&q=85',
+  'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1800&q=85',
+  'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1800&q=85',
+  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1800&q=85',
+  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=85'
+];
+
+const visualJournalSets = [
+  [
+    ['Lobby Ritual', 'First impressions shaped in stone, light and silence.', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=85'],
+    ['Suite Detail', 'The room as a promise of calm.', 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=85'],
+    ['Dining Theatre', 'Service choreographed around anticipation.', 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=85'],
+    ['Resort Mood', 'Luxury held in atmosphere before words.', 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=85'],
+    ['Arrival', 'The emotional architecture of being welcomed.', 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=85'],
+    ['Wellness', 'Stillness designed as a guest experience.', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&q=85'],
+    ['Evening Service', 'Turndown as the final signature of the day.', 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=900&q=85']
+  ],
+  [
+    ['Quiet Luxury', 'Confidence expressed through restraint.', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=85'],
+    ['Table Craft', 'Small details becoming memory.', 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=900&q=85'],
+    ['Guestroom Calm', 'A private world reset for rest.', 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?w=900&q=85'],
+    ['Poolside Escape', 'Leisure designed as theatre.', 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=85'],
+    ['Lobby Light', 'The visual grammar of arrival.', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=85'],
+    ['Culinary Moment', 'Hospitality served through pace and precision.', 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=85'],
+    ['Design Language', 'Spaces that speak before staff do.', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85']
+  ]
+];
+
+function rotateHeroVisuals(){
+  const heroBg = document.querySelector('.hero-bg');
+  if(!heroBg) return;
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % heroVisuals.length;
+    heroBg.style.opacity = '0.2';
+    setTimeout(() => {
+      heroBg.style.backgroundImage = `url('${heroVisuals[i]}')`;
+      heroBg.style.opacity = '0.48';
+    }, 500);
+  }, 120000);
+}
+
+function rotateVisualJournal(){
+  const cards = document.querySelectorAll('.gallery-item');
+  if(!cards.length) return;
+  let setIndex = 0;
+  setInterval(() => {
+    setIndex = (setIndex + 1) % visualJournalSets.length;
+    const set = visualJournalSets[setIndex];
+    cards.forEach((card, idx) => {
+      if(!set[idx]) return;
+      const img = card.querySelector('img');
+      const label = card.querySelector('.gallery-caption span');
+      const caption = card.querySelector('.gallery-caption p');
+      if(img){
+        img.style.opacity = '0.25';
+        setTimeout(() => {
+          img.src = set[idx][2];
+          img.style.opacity = '1';
+        }, 350);
+      }
+      if(label) label.textContent = set[idx][0];
+      if(caption) caption.textContent = set[idx][1];
+    });
+  }, 120000);
+}
+
+function conciergeAction(action){
+  if(action === 'stories'){
+    document.getElementById('all-stories')?.scrollIntoView({behavior:'smooth'});
+  }
+  if(action === 'about'){
+    goPage('about');
+  }
+  if(action === 'visual'){
+    document.querySelector('.gallery-section')?.scrollIntoView({behavior:'smooth'});
+  }
+  if(action === 'subscribe'){
+    document.querySelector('.subscribe-section')?.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  rotateHeroVisuals();
+  rotateVisualJournal();
+});
+
 </script>
 </body>
 </html>
-
