@@ -336,29 +336,6 @@ input[type=file].hidden-input{display:none}
 .chat-send-btn{background:var(--ink);border:none;color:#fff;padding:0.9rem 1rem;cursor:pointer;font-size:0.9rem;transition:background 0.2s}
 .chat-send-btn:hover{background:var(--g3)}
 
-/* ─── PHOTO GALLERY ─── */
-.gallery-section{background:var(--ink);padding:6rem 3rem}
-.gallery-inner{max-width:1160px;margin:0 auto}
-.gallery-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem}
-.gallery-header h2{font-family:'Bodoni Moda',serif;font-size:2.8rem;font-weight:900;color:#fff;line-height:1.1}
-.gallery-header h2 em{font-style:italic;color:var(--g)}
-.gallery-header p{font-family:'Cormorant',serif;font-style:italic;font-size:1rem;color:rgba(255,255,255,0.4);max-width:260px;text-align:right;line-height:1.6}
-.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;gap:6px}
-.gallery-item{position:relative;overflow:hidden;cursor:pointer;border-radius:3px}
-.gallery-item:nth-child(1){grid-column:1/3;grid-row:1/3}
-.gallery-item:nth-child(4){grid-column:3/5;grid-row:2/4}
-.gallery-item:nth-child(7){grid-column:1/3;grid-row:3/5}
-.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s ease,opacity 0.6s ease;min-height:180px}
-.gallery-item:nth-child(1) img,.gallery-item:nth-child(4) img,.gallery-item:nth-child(7) img{min-height:360px}
-.gallery-item:hover img{transform:scale(1.07)}
-.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);opacity:0;transition:opacity 0.4s ease}
-.gallery-item:hover .gallery-overlay{opacity:1}
-.gallery-caption{position:absolute;bottom:0;left:0;right:0;padding:1.25rem;transform:translateY(10px);opacity:0;transition:all 0.4s ease}
-.gallery-item:hover .gallery-caption{transform:translateY(0);opacity:1}
-.gallery-caption span{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--g);font-weight:600;display:block;margin-bottom:0.3rem}
-.gallery-caption p{font-family:'Cormorant',serif;font-style:italic;font-size:0.95rem;color:#fff;line-height:1.4}
-.gallery-bottom{margin-top:2.5rem;text-align:center}
-.gallery-bottom p{font-family:'Cormorant',serif;font-style:italic;font-size:1rem;color:rgba(255,255,255,0.3)}
 
 /* ─── EXPERIENCE STRIP ─── */
 .exp-strip{background:var(--warm);padding:4rem 3rem}
@@ -458,9 +435,10 @@ input[type=file].hidden-input{display:none}
     <div class="hero-bg"></div>
     <div class="hero-grad"></div>
     <div class="hero-content">
-      
-      <h1>Where <em>Service</em><br>Becomes<br>an Art Form</h1>
-      <p class="hero-sub">Real stories from the front lines of five-star hospitality, written by someone who lives and breathes this industry.</p>
+      <div class="hero-eyebrow">Luxury Hospitality Editorial</div>
+      <h1>The Hospitality<br><em>Journal</em></h1>
+      <div class="hero-byline">by Dhaval Joshi</div>
+      <p class="hero-sub">Observing the rituals, spaces and details behind unforgettable hospitality.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="document.getElementById('all-stories').scrollIntoView({behavior:'smooth'})">Read the Stories</button>
         <button class="btn-ghost" onclick="goPage('about')">About Dhaval</button>
@@ -486,21 +464,6 @@ input[type=file].hidden-input{display:none}
     <cite>Dhaval Joshi &nbsp;·&nbsp; The Hospitality Journal</cite>
   </div>
 
-  <!-- PHOTO GALLERY -->
-  <div class="gallery-section">
-    <div class="gallery-inner">
-      <div class="gallery-header">
-        <h2>The World of<br><em>Luxury Hospitality</em></h2>
-        <p>A curated study of the spaces, rituals and details that define modern luxury hospitality.</p>
-      </div>
-      <div class="gallery-grid" id="aiGallery">
-        <!-- AI images injected by JS -->
-      </div>
-      <div class="gallery-bottom">
-        <p>Every photograph tells a story. Every stay leaves one.</p>
-      </div>
-    </div>
-  </div>
 
   <!-- EXPERIENCE STRIP -->
   <div class="exp-strip">
@@ -806,13 +769,17 @@ input[type=file].hidden-input{display:none}
       <button class="overlay-close" onclick="closeLogin()">✕</button>
     </div>
     <div class="login-box-body">
-      <p>This section is for Dhaval only. Visitors can read all stories freely.</p>
+      <p>Secure admin login for Dhaval. Visitors can read the journal freely.</p>
+      <div class="login-field" id="emailField">
+        <label>Email</label>
+        <input type="email" id="adminEmail" placeholder="Enter your admin email…"/>
+      </div>
       <div class="login-field" id="pwField">
         <label>Password</label>
         <input type="password" id="pwInput" placeholder="Enter your password…" onkeydown="if(event.key==='Enter')checkLogin()"/>
-        <div class="err-msg" id="pwErr">Incorrect password. Please try again.</div>
+        <div class="err-msg" id="pwErr">Login failed. Check your email and password.</div>
       </div>
-      <button class="btn-login" onclick="checkLogin()">Enter →</button>
+      <button class="btn-login" onclick="checkLogin()">Sign in securely →</button>
     </div>
   </div>
 </div>
@@ -829,9 +796,6 @@ const db = createClient(
 );
 
 /* ─── CONSTANTS ─── */
-const SESS = 'dhj_admin';
-const PASS = 'Langham2025';
-
 const STOCK = [
   'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=80',
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80',
@@ -999,41 +963,59 @@ function buildTicker(){
 }
 
 /* ─── ADMIN ─── */
+function isAdmin(){ return !!currentUser }
+let currentUser = null;
+
 function setAdminUI(on){
   document.getElementById('adminBtn').style.display = on?'inline-block':'none';
   document.getElementById('logoutBtn').style.display = on?'inline-block':'none';
   document.getElementById('lockBtn').style.display  = on?'none':'flex';
   on?document.body.classList.add('admin-mode'):document.body.classList.remove('admin-mode');
 }
-function doLogout(){
-  sessionStorage.removeItem(SESS);
+
+async function doLogout(){
+  await db.auth.signOut();
+  currentUser = null;
   setAdminUI(false);
   goHome();
   toast('Logged out.');
 }
+
 function openLogin(){
+  document.getElementById('adminEmail').value='';
   document.getElementById('pwInput').value='';
   document.getElementById('pwErr').style.display='none';
   document.getElementById('pwField').classList.remove('error');
+  document.getElementById('emailField').classList.remove('error');
   document.getElementById('loginOverlay').classList.add('active');
-  setTimeout(()=>document.getElementById('pwInput').focus(),120);
+  setTimeout(()=>document.getElementById('adminEmail').focus(),120);
 }
+
 function closeLogin(){ document.getElementById('loginOverlay').classList.remove('active') }
 function overlayBg(e,id){ if(e.target.id===id) document.getElementById(id).classList.remove('active') }
+
 async function checkLogin(){
-  if(document.getElementById('pwInput').value===PASS){
-    sessionStorage.setItem(SESS,'yes');
-    setAdminUI(true);
-    closeLogin();
-    await loadPosts();
-    renderHome();
-    toast('Welcome back, Dhaval!');
-  } else {
+  const email = document.getElementById('adminEmail').value.trim();
+  const password = document.getElementById('pwInput').value;
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+  if(error || !data.user){
     document.getElementById('pwErr').style.display='block';
     document.getElementById('pwField').classList.add('error');
+    document.getElementById('emailField').classList.add('error');
     document.getElementById('pwInput').value='';
     document.getElementById('pwInput').focus();
+    return;
   }
+
+  currentUser = data.user;
+  setAdminUI(true);
+  closeLogin();
+  await loadPosts();
+  await loadDocs();
+  renderHome();
+  renderDocs();
+  toast('Welcome back, Dhaval!');
 }
 
 /* ─── EDITOR ─── */
@@ -1401,39 +1383,85 @@ function buildAIGallery(){
 }
 
 /* ─── DOCUMENTS ─── */
-const DOC_STORE = 'dhj_docs_v1';
-function getDocs(){ try{return JSON.parse(localStorage.getItem(DOC_STORE)||'[]')}catch{return[]} }
-function saveDocsLocal(d){ localStorage.setItem(DOC_STORE,JSON.stringify(d)) }
+let docsCache = [];
 
-function handleDocUpload(input){
+function cleanFileName(name){
+  return name.toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replace(/-+/g,'-');
+}
+
+async function loadDocs(){
+  try{
+    const { data, error } = await db.from('documents').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    docsCache = data || [];
+  }catch(e){
+    console.error('Error loading documents:', e);
+    docsCache = [];
+  }
+  return docsCache;
+}
+
+async function handleDocUpload(input){
   const file = input.files[0];
   if(!file) return;
-  const isPDF = file.type==='application/pdf';
-  const isWord = file.name.endsWith('.doc')||file.name.endsWith('.docx');
-  if(!isPDF&&!isWord){ alert('Please upload a PDF or Word document.'); return; }
-  if(file.size > 5*1024*1024){ alert('File must be under 5MB.'); return; }
-  const reader = new FileReader();
-  reader.onload = e=>{
-    const docs = getDocs();
-    docs.unshift({id:Date.now().toString(),name:file.name.replace(/\.[^.]+$/,''),type:isPDF?'pdf':'word',size:(file.size/1024).toFixed(0)+' KB',data:e.target.result,date:new Date().toISOString()});
-    saveDocsLocal(docs);
+
+  if(!isAdmin()){
+    toast('Please sign in as admin first.');
+    input.value='';
+    return;
+  }
+
+  const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+  const isWord = file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx');
+  if(!isPDF && !isWord){ alert('Please upload a PDF or Word document.'); input.value=''; return; }
+  if(file.size > 10*1024*1024){ alert('File must be under 10MB.'); input.value=''; return; }
+
+  showLoading(true);
+  try{
+    const safeName = cleanFileName(file.name);
+    const storagePath = `documents/${Date.now()}-${safeName}`;
+
+    const { error: uploadError } = await db.storage.from('documents').upload(storagePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+    if(uploadError) throw uploadError;
+
+    const { data: urlData } = db.storage.from('documents').getPublicUrl(storagePath);
+
+    const { error: insertError } = await db.from('documents').insert([{
+      name: file.name.replace(/\.[^.]+$/,''),
+      type: isPDF ? 'pdf' : 'word',
+      size: (file.size/1024).toFixed(0)+' KB',
+      file_name: file.name,
+      storage_path: storagePath,
+      public_url: urlData.publicUrl
+    }]);
+    if(insertError) throw insertError;
+
+    await loadDocs();
     renderDocs();
-    toast('Document uploaded. Visitors can now view it.');
-  };
-  reader.readAsDataURL(file);
+    toast('Document uploaded publicly.');
+  }catch(e){
+    console.error('Document upload failed:', e);
+    alert('Document upload failed. Check Supabase table, bucket, and policies.');
+  }
+  showLoading(false);
   input.value='';
 }
 
 function renderDocs(){
-  const docs = getDocs();
+  const docs = docsCache || [];
   const grid = document.getElementById('docsGrid');
   if(!grid) return;
   if(docs.length===0){ grid.innerHTML='<div class="no-docs"><p>No documents uploaded yet.</p></div>'; return; }
+
   grid.innerHTML = docs.map(d=>{
     const icon = d.type==='pdf'?'📄':'📝';
     const badge = d.type==='pdf'?'doc-type-pdf':'doc-type-word';
     const typeLabel = d.type==='pdf'?'PDF Document':'Word Document';
-    const date = new Date(d.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    const dateRaw = d.created_at || new Date().toISOString();
+    const date = new Date(dateRaw).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
     return `<div class="doc-card">
       <div class="doc-card-header">
         <div class="doc-type-badge ${badge}">${icon}</div>
@@ -1441,7 +1469,7 @@ function renderDocs(){
         <button class="doc-delete-btn" onclick="deleteDoc(event,'${d.id}')">✕ Delete</button>
       </div>
       <div class="doc-card-body">
-        <div class="doc-card-meta">${typeLabel} &nbsp;·&nbsp; ${d.size} &nbsp;·&nbsp; ${date}</div>
+        <div class="doc-card-meta">${typeLabel} &nbsp;·&nbsp; ${esc(d.size || '')} &nbsp;·&nbsp; ${date}</div>
         <button class="btn-view-doc" onclick="viewDoc('${d.id}')">View Document</button>
       </div>
     </div>`;
@@ -1449,22 +1477,15 @@ function renderDocs(){
 }
 
 function viewDoc(id){
-  const doc = getDocs().find(d=>d.id===id);
+  const doc = docsCache.find(d=>String(d.id)===String(id));
   if(!doc) return;
   document.getElementById('docViewerTitle').textContent = doc.name;
   const frame = document.getElementById('docViewerFrame');
+
   if(doc.type==='pdf'){
-    frame.src = doc.data + '#toolbar=0&navpanes=0&scrollbar=1';
+    frame.src = doc.public_url + '#toolbar=0&navpanes=0&scrollbar=1';
   } else {
-    try{
-      const byteString = atob(doc.data.split(',')[1]);
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for(let i=0;i<byteString.length;i++) ia[i]=byteString.charCodeAt(i);
-      const blob = new Blob([ab],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-      const blobUrl = URL.createObjectURL(blob);
-      frame.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(blobUrl)}`;
-    }catch(e){ toast('Could not preview this document.'); return; }
+    frame.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(doc.public_url)}`;
   }
   document.getElementById('docViewer').classList.add('active');
 }
@@ -1474,13 +1495,26 @@ function closeDocViewer(){
   document.getElementById('docViewerFrame').src='about:blank';
 }
 
-function deleteDoc(e,id){
+async function deleteDoc(e,id){
   e.stopPropagation();
   if(!isAdmin()) return;
   if(!confirm('Delete this document permanently?')) return;
-  saveDocsLocal(getDocs().filter(d=>d.id!==id));
-  renderDocs();
-  toast('Document deleted.');
+  showLoading(true);
+  try{
+    const doc = docsCache.find(d=>String(d.id)===String(id));
+    if(doc?.storage_path){
+      await db.storage.from('documents').remove([doc.storage_path]);
+    }
+    const { error } = await db.from('documents').delete().eq('id', id);
+    if(error) throw error;
+    await loadDocs();
+    renderDocs();
+    toast('Document deleted.');
+  }catch(e){
+    console.error('Delete failed:', e);
+    alert('Could not delete document. Check Supabase policies.');
+  }
+  showLoading(false);
 }
 
 /* ─── SECURITY ─── */
@@ -1491,8 +1525,15 @@ document.addEventListener('contextmenu',e=>{
 /* ─── INIT ─── */
 buildTicker();
 buildAIGallery();
-renderDocs();
-setAdminUI(isAdmin());
+setAdminUI(false);
+
+db.auth.getUser().then(async ({data})=>{
+  currentUser = data?.user || null;
+  setAdminUI(isAdmin());
+  await loadDocs();
+  renderDocs();
+});
+
 loadPosts().then(()=>renderHome());
 
 
@@ -1505,26 +1546,6 @@ const heroVisuals = [
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=85'
 ];
 
-const visualJournalSets = [
-  [
-    ['Lobby Ritual', 'First impressions shaped in stone, light and silence.', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=85'],
-    ['Suite Detail', 'The room as a promise of calm.', 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=85'],
-    ['Dining Theatre', 'Service choreographed around anticipation.', 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=85'],
-    ['Resort Mood', 'Luxury held in atmosphere before words.', 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=85'],
-    ['Arrival', 'The emotional architecture of being welcomed.', 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=85'],
-    ['Wellness', 'Stillness designed as a guest experience.', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&q=85'],
-    ['Evening Service', 'Turndown as the final signature of the day.', 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=900&q=85']
-  ],
-  [
-    ['Quiet Luxury', 'Confidence expressed through restraint.', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=85'],
-    ['Table Craft', 'Small details becoming memory.', 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=900&q=85'],
-    ['Guestroom Calm', 'A private world reset for rest.', 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?w=900&q=85'],
-    ['Poolside Escape', 'Leisure designed as theatre.', 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=85'],
-    ['Lobby Light', 'The visual grammar of arrival.', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=85'],
-    ['Culinary Moment', 'Hospitality served through pace and precision.', 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=85'],
-    ['Design Language', 'Spaces that speak before staff do.', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85']
-  ]
-];
 
 function rotateHeroVisuals(){
   const heroBg = document.querySelector('.hero-bg');
@@ -1540,30 +1561,6 @@ function rotateHeroVisuals(){
   }, 120000);
 }
 
-function rotateVisualJournal(){
-  const cards = document.querySelectorAll('.gallery-item');
-  if(!cards.length) return;
-  let setIndex = 0;
-  setInterval(() => {
-    setIndex = (setIndex + 1) % visualJournalSets.length;
-    const set = visualJournalSets[setIndex];
-    cards.forEach((card, idx) => {
-      if(!set[idx]) return;
-      const img = card.querySelector('img');
-      const label = card.querySelector('.gallery-caption span');
-      const caption = card.querySelector('.gallery-caption p');
-      if(img){
-        img.style.opacity = '0.25';
-        setTimeout(() => {
-          img.src = set[idx][2];
-          img.style.opacity = '1';
-        }, 350);
-      }
-      if(label) label.textContent = set[idx][0];
-      if(caption) caption.textContent = set[idx][1];
-    });
-  }, 120000);
-}
 
 function conciergeAction(action){
   if(action === 'stories'){
@@ -1573,7 +1570,7 @@ function conciergeAction(action){
     goPage('about');
   }
   if(action === 'visual'){
-    document.querySelector('.gallery-section')?.scrollIntoView({behavior:'smooth'});
+    document.getElementById('all-stories')?.scrollIntoView({behavior:'smooth'});
   }
   if(action === 'subscribe'){
     document.querySelector('.subscribe-section')?.scrollIntoView({behavior:'smooth'});
@@ -1582,7 +1579,6 @@ function conciergeAction(action){
 
 document.addEventListener('DOMContentLoaded', () => {
   rotateHeroVisuals();
-  rotateVisualJournal();
 });
 
 </script>
