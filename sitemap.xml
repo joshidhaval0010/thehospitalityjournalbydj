@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://thehospitalityjournal.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- The Best Service Makes a Guest Feel Seen, Not Watched -->
+  <url>
+    <loc>https://thehospitalityjournal.org/post/e7f94698-c4d8-46bb-ad5e-4e8c75c80382</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- The Guest Never Remembers the Thread Count -->
+  <url>
+    <loc>https://thehospitalityjournal.org/post/044d6654-513f-4d3e-b6d1-a1d32f26e739</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- What a Perfectly Made Room Actually Says -->
+  <url>
+    <loc>https://thehospitalityjournal.org/post/168815ac-de61-4635-adab-a23cdcba9450</loc>
+    <lastmod>2026-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- When Going the Extra Mile Goes Too Far -->
+  <url>
+    <loc>https://thehospitalityjournal.org/post/02206f67-4aaa-4e35-89c4-0e88b9b7667b</loc>
+    <lastmod>2026-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
