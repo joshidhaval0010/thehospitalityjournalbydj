@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Hospitality Journal</title>
+  <script>
+    // GitHub Pages SPA routing trick.
+    // When a direct URL like /post/abc is hit, GitHub serves this 404 page.
+    // We save the intended path to sessionStorage and redirect to the root,
+    // where index.html will read it and navigate to the right post.
+    sessionStorage.setItem('spa-redirect', window.location.pathname + window.location.search);
+    window.location.replace('/');
+  </script>
+</head>
+<body></body>
+</html>
