@@ -1238,6 +1238,19 @@ async function goHome(){
   showPage('home','dark');
   await loadPosts();
   renderHome();
+  /* ─── URL ROUTING: reset to home URL ─── */
+  if(window.location.pathname !== '/'){
+    history.pushState({}, 'The Hospitality Journal', '/');
+  }
+  document.title = 'The Hospitality Journal by Dhaval Joshi | Luxury Hospitality Writing';
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if(canonical) canonical.href = 'https://thehospitalityjournal.org';
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  if(ogUrl) ogUrl.setAttribute('content','https://thehospitalityjournal.org');
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if(ogTitle) ogTitle.setAttribute('content','The Hospitality Journal by Dhaval Joshi');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if(ogDesc) ogDesc.setAttribute('content','Luxury hospitality editorial journal focused on guest experience, service design, hotel operations, and the psychology of memorable service.');
 }
 function goPage(p){
   if(p==='about') showPage('about','dark');
@@ -1259,6 +1272,21 @@ function goPost(index){
     `<span>${date}</span><span style="opacity:0.3">|</span><span>${mins} min read</span><span style="opacity:0.3">|</span><span>Dhaval Joshi</span>`;
   document.getElementById('postBody').innerHTML = p.content;
   showPage('post','dark');
+  /* ─── URL ROUTING: push unique post URL ─── */
+  const postUrl = '/post/' + p.id;
+  if(window.location.pathname !== postUrl){
+    history.pushState({postId: p.id}, p.title, postUrl);
+  }
+  document.title = p.title + ' | The Hospitality Journal';
+  const desc = p.summary || p.content.replace(/<[^>]*>/g,'').slice(0,160);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if(canonical) canonical.href = 'https://thehospitalityjournal.org' + postUrl;
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  if(ogUrl) ogUrl.setAttribute('content','https://thehospitalityjournal.org' + postUrl);
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if(ogTitle) ogTitle.setAttribute('content', p.title + ' | The Hospitality Journal');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if(ogDesc) ogDesc.setAttribute('content', desc);
 }
 
 /* ─── CATEGORY HELPERS ─── */
@@ -1845,12 +1873,43 @@ function initHeroRotation(){
   }, 120000);
 }
 
+/* ─── URL ROUTING: browser back/forward ─── */
+window.addEventListener('popstate', function(){
+  const match = window.location.pathname.match(/^\/post\/([a-f0-9-]{36})/);
+  if(match){
+    const id = match[1];
+    const index = postsCache.findIndex(p => p.id === id);
+    if(index !== -1) goPost(index);
+  } else {
+    showPage('home','dark');
+    renderHome();
+    document.title = 'The Hospitality Journal by Dhaval Joshi | Luxury Hospitality Writing';
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if(canonical) canonical.href = 'https://thehospitalityjournal.org';
+  }
+});
+
 /* ─── INIT ─── */
 buildTicker();
 initHeroRotation();
 renderDocs();
 setAdminUI(isAdmin());
-loadPosts().then(()=>renderHome());
+
+/* ─── URL ROUTING: handle GitHub Pages 404 redirect & direct post URLs ─── */
+(function(){
+  const redirect = sessionStorage.getItem('spa-redirect');
+  if(redirect){ sessionStorage.removeItem('spa-redirect'); history.replaceState(null,'',redirect); }
+})();
+
+loadPosts().then(()=>{
+  renderHome();
+  const match = window.location.pathname.match(/^\/post\/([a-f0-9-]{36})/);
+  if(match){
+    const id = match[1];
+    const index = postsCache.findIndex(p => p.id === id);
+    if(index !== -1) goPost(index);
+  }
+});
 </script>
 </body>
 </html>
