@@ -306,19 +306,32 @@ input[type=file].hidden-input{display:none}
 /* ─── SUBSCRIBE SECTION ─── */
 .subscribe-section{background:#111;padding:6rem 3rem;position:relative;overflow:hidden;border-top:1px solid rgba(191,160,106,0.1)}
 .subscribe-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(196,162,101,0.08),transparent 70%);pointer-events:none}
-.subscribe-inner{max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.subscribe-inner{max-width:560px;margin:0 auto;text-align:center;position:relative;z-index:1}
 .subscribe-eyebrow{font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:1rem}
 .subscribe-inner h2{font-family:'Fraunces',Georgia,serif;font-size:2.2rem;font-weight:700;color:#fff;line-height:1.18;margin-bottom:0.85rem;letter-spacing:-0.01em}
 .subscribe-inner h2 em{font-style:italic;color:var(--g)}
-.subscribe-inner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;line-height:1.7}
-.subscribe-form{display:flex;gap:0;max-width:460px;margin:0 auto;overflow:hidden;border:1px solid rgba(191,160,106,0.3)}
-.subscribe-form input[type=email]{flex:1;background:rgba(255,255,255,0.06);border:none;padding:1rem 1.25rem;font-size:0.9rem;font-family:'Inter',-apple-system,sans-serif;color:#fff;outline:none}
-.subscribe-form input[type=email]::placeholder{color:rgba(255,255,255,0.3)}
-.subscribe-form button{background:var(--g);color:var(--ink);border:none;padding:1rem 1.5rem;font-size:0.62rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;font-family:'Inter',-apple-system,sans-serif;transition:background 0.3s;white-space:nowrap}
+.subscribe-inner>p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;line-height:1.7}
+.subscribe-form{display:flex;flex-direction:column;gap:0.75rem;max-width:420px;margin:0 auto}
+.subscribe-fields{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+.subscribe-form input{background:rgba(255,255,255,0.06);border:1px solid rgba(191,160,106,0.25);padding:0.9rem 1.1rem;font-size:0.88rem;font-family:'Inter',-apple-system,sans-serif;color:#fff;outline:none;border-radius:2px;transition:border-color 0.2s;width:100%}
+.subscribe-form input:focus{border-color:rgba(191,160,106,0.7)}
+.subscribe-form input::placeholder{color:rgba(255,255,255,0.28)}
+.subscribe-form button{background:var(--g);color:var(--ink);border:none;padding:0.95rem;font-size:0.65rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;font-family:'Inter',-apple-system,sans-serif;transition:background 0.3s;border-radius:2px;width:100%}
 .subscribe-form button:hover{background:var(--g2)}
-.subscribe-note{font-size:0.68rem;color:rgba(255,255,255,0.25);margin-top:0.9rem;letter-spacing:0.04em}
+.subscribe-note{font-size:0.68rem;color:rgba(255,255,255,0.2);margin-top:0.65rem;letter-spacing:0.04em}
 .subscribe-success{display:none;text-align:center;padding:1.5rem}
 .subscribe-success p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--g)}
+@media(max-width:600px){.subscribe-fields{grid-template-columns:1fr}}
+/* ─── LIKE BUTTON ─── */
+.like-btn{display:inline-flex;align-items:center;gap:0.45rem;background:none;border:1px solid rgba(191,160,106,0.25);border-radius:2px;padding:0.45rem 0.85rem;font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;font-family:'Inter',-apple-system,sans-serif;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.45)}
+.like-btn:hover{border-color:rgba(191,160,106,0.6);color:var(--g)}
+.like-btn.liked{background:rgba(191,160,106,0.12);border-color:var(--g);color:var(--g)}
+.like-btn .like-heart{font-size:0.9rem;transition:transform 0.2s}
+.like-btn:hover .like-heart,.like-btn.liked .like-heart{transform:scale(1.2)}
+.bento-like{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.68rem;color:rgba(0,0,0,0.3);background:rgba(191,160,106,0.08);border:1px solid rgba(191,160,106,0.15);border-radius:2px;padding:0.2rem 0.55rem;transition:all 0.2s;cursor:pointer;font-family:'Inter',-apple-system,sans-serif;font-weight:500;line-height:1;margin-left:0.25rem}
+.bento-like:hover{color:var(--g3);border-color:rgba(191,160,106,0.4);background:rgba(191,160,106,0.15)}
+.bento-like.liked{color:var(--g3);border-color:var(--g3);background:rgba(191,160,106,0.15)}
+.post-like-row{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1.5rem}
 
 /* ─── SUBSCRIBE POPUP ─── */
 .sub-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:800;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(8px)}
@@ -872,10 +885,12 @@ img{content-visibility:auto}
       <div class="subscribe-eyebrow">Stay Connected</div>
       <h2>Never Miss a <em>Story</em></h2>
       <p>New posts on hospitality, service craft, and the luxury guest experience. No spam, ever.</p>
-      <form class="subscribe-form" name="subscribe-home" method="POST" data-netlify="true" onsubmit="handleSubscribe(event,'home-success')">
-        <input type="hidden" name="form-name" value="subscribe-home"/>
-        <input type="email" name="email" placeholder="Your email address…" required/>
-        <button type="submit">Subscribe</button>
+      <form class="subscribe-form" name="subscribe-home" onsubmit="handleSubscribe(event,'home-success')">
+        <div class="subscribe-fields">
+          <input type="text" name="name" placeholder="Your first name…"/>
+          <input type="email" name="email" placeholder="Your email address…" required/>
+        </div>
+        <button type="submit">Subscribe Free →</button>
       </form>
       <div id="home-success" class="subscribe-success"><p>You are subscribed. Thank you for following along.</p></div>
       <p class="subscribe-note">Unsubscribe anytime. No ads, no third parties.</p>
@@ -912,8 +927,16 @@ img{content-visibility:auto}
   </div>
   <div style="background:var(--warm);padding:3rem;text-align:center;border-top:1px solid var(--border)">
     <p style="font-family:'Fraunces',Georgia,serif;font-size:1.3rem;font-style:italic;color:var(--ink);margin-bottom:0.5rem">Enjoyed this story?</p>
-    <p style="font-size:0.82rem;color:var(--fog);margin-bottom:1.25rem">Subscribe to get new posts directly in your inbox.</p>
-    <button onclick="openSubPopup()" style="background:var(--ink);color:#fff;border:none;padding:0.8rem 2rem;font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'Inter',-apple-system,sans-serif;transition:background 0.2s" onmouseover="this.style.background='var(--g3)'" onmouseout="this.style.background='var(--ink)'">Subscribe Free</button>
+    <p style="font-size:0.82rem;color:var(--fog);margin-bottom:1.5rem">Subscribe to get new posts directly in your inbox.</p>
+    <div class="post-like-row">
+      <button onclick="openSubPopup()" style="background:var(--ink);color:#fff;border:none;padding:0.8rem 2rem;font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border-radius:2px;cursor:pointer;font-family:'Inter',-apple-system,sans-serif;transition:background 0.2s" onmouseover="this.style.background='var(--g3)'" onmouseout="this.style.background='var(--ink)'">Subscribe Free</button>
+      <button class="like-btn" id="postLikeBtn" onclick="toggleLike()">
+        <span class="like-heart">♥</span>
+        <span class="like-num" id="postLikeCount">0</span>
+        <span>Likes</span>
+      </button>
+    </div>
+    <p style="font-size:0.7rem;color:var(--fog);margin-top:1rem;font-style:italic">Tap the heart to appreciate this story</p>
   </div>
   <footer class="site-footer">
     <div class="footer-inner">
@@ -1066,13 +1089,15 @@ img{content-visibility:auto}
     <div class="sub-popup-body">
       <h3>Get new <em>stories</em> in your inbox</h3>
       <p>Join readers who follow Dhaval's reflections on five-star hospitality. One email per post, nothing more.</p>
-      <form class="sub-popup-form" name="subscribe-popup" method="POST" data-netlify="true" onsubmit="handleSubscribe(event,'popup-success-msg')">
-        <input type="hidden" name="form-name" value="subscribe-popup"/>
+      <form class="sub-popup-form" name="subscribe-popup" onsubmit="handleSubscribe(event,'popup-success-msg')">
+        <input type="text" name="name" id="popupName" placeholder="Your first name…"/>
         <input type="email" name="email" id="popupEmail" placeholder="Your email address…" required/>
-        <button type="submit">Subscribe Free</button>
+        <button type="submit">Subscribe Free →</button>
       </form>
-      <div id="popup-success-msg" style="display:none;text-align:center;padding:0.5rem 0">
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--g);font-size:1.05rem">You are subscribed. Welcome.</p>
+      <div id="popup-success-msg" style="display:none;text-align:center;padding:1.25rem 0">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem">✦</div>
+        <p style="font-family:'Fraunces',Georgia,serif;font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:0.25rem">Welcome aboard.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--g);font-size:1rem">New stories will arrive in your inbox.</p>
       </div>
       <p class="popup-skip" onclick="closeSubPopup()">No thanks, I'll just read</p>
     </div>
@@ -1271,6 +1296,15 @@ function goPost(index){
   document.getElementById('postHeroMeta').innerHTML =
     `<span>${date}</span><span style="opacity:0.3">|</span><span>${mins} min read</span><span style="opacity:0.3">|</span><span>Dhaval Joshi</span>`;
   document.getElementById('postBody').innerHTML = p.content;
+  currentPostId = p.id;
+  // Update like button on post page
+  const postLikeBtn = document.getElementById('postLikeBtn');
+  const postLikeCount = document.getElementById('postLikeCount');
+  if(postLikeBtn){
+    const liked = getLikedPosts().includes(p.id);
+    postLikeBtn.classList.toggle('liked', liked);
+    if(postLikeCount) postLikeCount.textContent = likesCache[p.id] || 0;
+  }
   showPage('post','dark');
   /* ─── URL ROUTING: push unique post URL ─── */
   const postUrl = '/post/' + p.id;
@@ -1449,6 +1483,8 @@ function renderBento(posts){
       else sizeClass='tertiary';
     }
     const deleteBtn = isAdmin()?`<button class="delete-btn" onclick="deletePost(event,'${p.id}')" style="display:inline-block">✕</button>`:'';
+    const likeCount = likesCache[p.id] || 0;
+    const likedClass = getLikedPosts().includes(p.id) ? ' liked' : '';
     return `<div class="bento-card ${sizeClass}" onclick="goPost(${origIdx})">
       <div class="bento-strip cat-${catKey}"></div>
       <div class="bento-body">
@@ -1459,6 +1495,9 @@ function renderBento(posts){
           <span>${date}</span><span>${mins} min read</span>
           ${deleteBtn}
           <span class="bento-meta-arrow">→</span>
+          <span class="bento-like${likedClass}" data-id="${p.id}" onclick="event.stopPropagation();toggleLike('${p.id}')">
+            ♥ <span class="like-badge-num">${likeCount}</span>
+          </span>
         </div>
       </div>
     </div>`;
@@ -1680,13 +1719,120 @@ window.addEventListener('scroll',()=>{
 
 
 /* ─── SUBSCRIBE ─── */
-function handleSubscribe(e, successId){
+async function handleSubscribe(e, successId){
   e.preventDefault();
   const form = e.target;
-  const data = new FormData(form);
-  fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(data).toString()})
-    .then(()=>{ form.style.display='none'; document.getElementById(successId).style.display='block'; sessionStorage.setItem('subscribed','yes'); })
-    .catch(()=>{ form.style.display='none'; document.getElementById(successId).style.display='block'; });
+  const email = form.querySelector('input[type=email]').value.trim();
+  const nameEl = form.querySelector('input[type=text]');
+  const name = nameEl ? nameEl.value.trim() : null;
+  const btn = form.querySelector('button[type=submit]');
+  const origText = btn.textContent;
+
+  if(!email) return;
+
+  btn.textContent = 'Subscribing…';
+  btn.disabled = true;
+
+  try {
+    const payload = { email, source: successId === 'popup-success-msg' ? 'popup' : 'home' };
+    if(name) payload.name = name;
+    const { error } = await db.from('subscribers').insert([payload]);
+    if(error && error.code === '23505'){
+      form.style.display='none';
+      document.getElementById(successId).style.display='block';
+      sessionStorage.setItem('subscribed','yes');
+    } else if(error){
+      throw error;
+    } else {
+      const greeting = name ? `Welcome, ${name}.` : 'Welcome aboard.';
+      const successEl = document.getElementById(successId);
+      const msgP = successEl.querySelector('p');
+      if(msgP && name) msgP.textContent = greeting + ' New stories will arrive in your inbox.';
+      form.style.display='none';
+      successEl.style.display='block';
+      sessionStorage.setItem('subscribed','yes');
+    }
+  } catch(err) {
+    console.error('Subscribe error:', err);
+    toast('Something went wrong. Please try again.');
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
+/* ─── LIKES SYSTEM ─── */
+let likesCache = {}; // { postId: count }
+let currentPostId = null;
+
+function getFingerprint(){
+  let fp = localStorage.getItem('jhj_fp');
+  if(!fp){
+    fp = 'fp_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('jhj_fp', fp);
+  }
+  return fp;
+}
+
+function getLikedPosts(){
+  try { return JSON.parse(localStorage.getItem('jhj_liked') || '[]'); } catch{ return []; }
+}
+
+function setLikedPost(postId, liked){
+  const liked_posts = getLikedPosts();
+  if(liked && !liked_posts.includes(postId)) liked_posts.push(postId);
+  if(!liked) { const i = liked_posts.indexOf(postId); if(i>-1) liked_posts.splice(i,1); }
+  localStorage.setItem('jhj_liked', JSON.stringify(liked_posts));
+}
+
+async function loadLikes(){
+  try {
+    const { data, error } = await db.from('likes').select('post_id');
+    if(!error && data){
+      likesCache = {};
+      data.forEach(r => { likesCache[r.post_id] = (likesCache[r.post_id]||0)+1; });
+    }
+  } catch(e){ console.warn('Likes load error:', e); }
+}
+
+async function toggleLike(postId){
+  const id = postId || currentPostId;
+  if(!id) return;
+  const fp = getFingerprint();
+  const liked_posts = getLikedPosts();
+  const alreadyLiked = liked_posts.includes(id);
+
+  if(alreadyLiked){
+    // Unlike
+    await db.from('likes').delete().eq('post_id', id).eq('fingerprint', fp);
+    likesCache[id] = Math.max(0, (likesCache[id]||1)-1);
+    setLikedPost(id, false);
+  } else {
+    // Like
+    const { error } = await db.from('likes').insert([{ post_id: id, fingerprint: fp }]);
+    if(!error || error.code === '23505'){
+      likesCache[id] = (likesCache[id]||0) + (error ? 0 : 1);
+      setLikedPost(id, true);
+    }
+  }
+  updateLikeUI(id);
+}
+
+function updateLikeUI(postId){
+  const count = likesCache[postId] || 0;
+  const liked = getLikedPosts().includes(postId);
+  // Update post page button
+  if(postId === currentPostId){
+    const btn = document.getElementById('postLikeBtn');
+    const num = document.getElementById('postLikeCount');
+    if(btn){ btn.classList.toggle('liked', liked); }
+    if(num){ num.textContent = count; }
+  }
+  // Update bento card badge
+  const badge = document.querySelector(`.bento-like[data-id="${postId}"]`);
+  if(badge){
+    badge.classList.toggle('liked', liked);
+    badge.querySelector('.like-badge-num').textContent = count;
+  }
 }
 
 /* ─── SUBSCRIBE POPUP ─── */
@@ -1901,7 +2047,8 @@ setAdminUI(isAdmin());
   if(redirect){ sessionStorage.removeItem('spa-redirect'); history.replaceState(null,'',redirect); }
 })();
 
-loadPosts().then(()=>{
+loadPosts().then(async ()=>{
+  await loadLikes();
   renderHome();
   const match = window.location.pathname.match(/^\/post\/([a-f0-9-]{36})/);
   if(match){
