@@ -1906,56 +1906,43 @@ document.addEventListener('contextmenu',e=>{
 });
 
 /* ─── DOCUMENTS ─── */
-const DOC_STORE = 'dhj_docs_v1';
-function getDocs(){ try{return JSON.parse(localStorage.getItem(DOC_STORE)||'[]')}catch{return[]} }
-function saveDocsLocal(d){ localStorage.setItem(DOC_STORE,JSON.stringify(d)) }
+/* storage now via Supabase */
 
-function handleDocUpload(input){
+async function handleDocUpload(input){
   const file = input.files[0];
   if(!file) return;
   const isPDF = file.type==='application/pdf';
   const isWord = file.name.endsWith('.doc')||file.name.endsWith('.docx');
   if(!isPDF&&!isWord){ alert('Please upload a PDF or Word document.'); return; }
   if(file.size > 5*1024*1024){ alert('File must be under 5MB.'); return; }
-  const reader = new FileReader();
-  reader.onload = e=>{
-    const docs = getDocs();
-    docs.unshift({id:Date.now().toString(),name:file.name.replace(/\.[^.]+$/,''),type:isPDF?'pdf':'word',size:(file.size/1024).toFixed(0)+' KB',data:e.target.result,date:new Date().toISOString()});
-    saveDocsLocal(docs);
-    renderDocs();
-    toast('Document uploaded successfully.');
-  };
-  reader.readAsDataURL(file);
+  const safeFileName = Date.now() + '_' + file.name.replace(/\s+/g,'_');
+  const { data: storageData, error: storageErr } = await db.storage
+    .from('documents')
+    .upload(safeFileName, file, { contentType: file.type, upsert: false });
+  if(storageErr){ toast('Upload failed: ' + storageErr.message); input.value=''; return; }
+  const { error: dbErr } = await db.from('documents').insert({
+    name: file.name.replace(/\.[^.]+$/,''),
+    file_path: storageData.path,
+    type: isPDF ? 'pdf' : 'word',
+    size_kb: Math.round(file.size / 1024)
+  });
+  if(dbErr){ toast('Could not save document info.'); input.value=''; return; }
+  await renderDocs();
+  toast('Document uploaded successfully.');
   input.value='';
 }
 
-function viewDoc(id){
-  const doc = getDocs().find(d=>d.id===id);
+async function viewDoc(id){
+  const doc = (window._docsCache||[]).find(d=>d.id===id);
   if(!doc) return;
   document.getElementById('docViewerTitle').textContent = doc.name;
   const frame = document.getElementById('docViewerFrame');
+  const { data } = db.storage.from('documents').getPublicUrl(doc.file_path);
+  const url = data.publicUrl;
   if(doc.type==='pdf'){
-    try{
-      const base64 = doc.data.split(',')[1];
-      const byteString = atob(base64);
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for(let i=0;i<byteString.length;i++) ia[i]=byteString.charCodeAt(i);
-      const blob = new Blob([ab],{type:'application/pdf'});
-      if(window._docBlobUrl) URL.revokeObjectURL(window._docBlobUrl);
-      window._docBlobUrl = URL.createObjectURL(blob);
-      frame.src = window._docBlobUrl;
-    }catch(e){ toast('Could not preview this PDF.'); return; }
+    frame.src = url;
   } else {
-    try{
-      const byteString = atob(doc.data.split(',')[1]);
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for(let i=0;i<byteString.length;i++) ia[i]=byteString.charCodeAt(i);
-      const blob = new Blob([ab],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-      const blobUrl = URL.createObjectURL(blob);
-      frame.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(blobUrl)}`;
-    }catch(e){ toast('Could not preview this document.'); return; }
+    frame.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
   }
   document.getElementById('docViewer').classList.add('active');
 }
@@ -1963,32 +1950,37 @@ function viewDoc(id){
 function closeDocViewer(){
   document.getElementById('docViewer').classList.remove('active');
   document.getElementById('docViewerFrame').src='about:blank';
-  if(window._docBlobUrl){ URL.revokeObjectURL(window._docBlobUrl); window._docBlobUrl=null; }
 }
 
-function deleteDoc(e,id){
+async function deleteDoc(e,id){
   e.stopPropagation();
   if(!isAdmin()) return;
   if(!confirm('Delete this document permanently?')) return;
-  saveDocsLocal(getDocs().filter(d=>d.id!==id));
-  renderDocs();
+  const doc = (window._docsCache||[]).find(d=>d.id===id);
+  if(doc) await db.storage.from('documents').remove([doc.file_path]);
+  await db.from('documents').delete().eq('id',id);
+  await renderDocs();
   toast('Document deleted.');
 }
 
 /* ─── RENDER DOCS ─── */
-function renderDocs(){
-  const docs = getDocs();
+async function renderDocs(){
   const grid = document.getElementById('docsGrid');
   if(!grid) return;
-  if(docs.length===0){
+  const { data: docs, error } = await db.from('documents').select('*').order('created_at',{ascending:false});
+  if(error){ console.error('Docs fetch error:',error); return; }
+  window._docsCache = docs || [];
+  let filtered = docs || [];
+  if(docsQuery) filtered = filtered.filter(d=>d.name.toLowerCase().includes(docsQuery)||d.type.toLowerCase().includes(docsQuery));
+  if(filtered.length===0){
     grid.innerHTML='<div class="no-docs"><p>No documents uploaded yet.</p></div>';
     return;
   }
-  grid.innerHTML = docs.map(d=>{
+  grid.innerHTML = filtered.map(d=>{
     const icon = d.type==='pdf'?'📄':'📝';
     const badge = d.type==='pdf'?'doc-type-pdf':'doc-type-word';
     const typeLabel = d.type==='pdf'?'PDF Document':'Word Document';
-    const date = new Date(d.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    const date = new Date(d.created_at).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
     return `<div class="doc-card">
       <div class="doc-card-header">
         <div class="doc-type-badge ${badge}">${icon}</div>
@@ -1996,7 +1988,7 @@ function renderDocs(){
         <button class="doc-delete-btn" onclick="deleteDoc(event,'${d.id}')">✕ Delete</button>
       </div>
       <div class="doc-card-body">
-        <div class="doc-card-meta">${typeLabel} &nbsp;·&nbsp; ${d.size} &nbsp;·&nbsp; ${date}</div>
+        <div class="doc-card-meta">${typeLabel} &nbsp;·&nbsp; ${d.size_kb} KB &nbsp;·&nbsp; ${date}</div>
         <button class="btn-view-doc" onclick="viewDoc('${d.id}')">View Document</button>
       </div>
     </div>`;
