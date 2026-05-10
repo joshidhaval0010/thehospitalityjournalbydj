@@ -876,7 +876,7 @@ img{content-visibility:auto}
       </div>
       <button class="doc-viewer-close" onclick="closeDocViewer()">✕ Close</button>
     </div>
-    <iframe class="doc-viewer-frame" id="docViewerFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+    <iframe class="doc-viewer-frame" id="docViewerFrame" ></iframe>
   </div>
 
   <!-- SUBSCRIBE SECTION -->
@@ -1935,7 +1935,17 @@ function viewDoc(id){
   document.getElementById('docViewerTitle').textContent = doc.name;
   const frame = document.getElementById('docViewerFrame');
   if(doc.type==='pdf'){
-    frame.src = doc.data + '#toolbar=0&navpanes=0&scrollbar=1';
+    try{
+      const base64 = doc.data.split(',')[1];
+      const byteString = atob(base64);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for(let i=0;i<byteString.length;i++) ia[i]=byteString.charCodeAt(i);
+      const blob = new Blob([ab],{type:'application/pdf'});
+      if(window._docBlobUrl) URL.revokeObjectURL(window._docBlobUrl);
+      window._docBlobUrl = URL.createObjectURL(blob);
+      frame.src = window._docBlobUrl;
+    }catch(e){ toast('Could not preview this PDF.'); return; }
   } else {
     try{
       const byteString = atob(doc.data.split(',')[1]);
@@ -1953,6 +1963,7 @@ function viewDoc(id){
 function closeDocViewer(){
   document.getElementById('docViewer').classList.remove('active');
   document.getElementById('docViewerFrame').src='about:blank';
+  if(window._docBlobUrl){ URL.revokeObjectURL(window._docBlobUrl); window._docBlobUrl=null; }
 }
 
 function deleteDoc(e,id){
