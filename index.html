@@ -732,7 +732,7 @@ img{content-visibility:auto}
 
 /* ══ HERO SPLIT LAYOUT ══ */
 .hero{height:100vh;min-height:700px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;background:var(--ink);position:relative}
-.hero-left{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:5rem 4rem 5rem 5rem}
+.hero-left{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:4rem 4rem 4rem 5rem}
 .hero-right{position:relative;overflow:hidden;background:#0a0a0a}
 .hero-right-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease;animation:hrZoom 12s ease-out forwards}
 .hero-right-slide.active{opacity:1}
@@ -754,7 +754,7 @@ img{content-visibility:auto}
 .btn-hero-primary:hover{background:#d4b97a;transform:translateY(-3px);box-shadow:0 10px 30px rgba(191,160,106,0.35)}
 .btn-hero-ghost{background:transparent;color:rgba(255,255,255,0.85);font-size:0.6rem;font-weight:500;letter-spacing:0.28em;text-transform:uppercase;padding:1rem 2.4rem;border:1px solid rgba(255,255,255,0.3);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;border-radius:0}
 .btn-hero-ghost:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.6);transform:translateY(-3px)}
-.hero-stats{display:flex;gap:2rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.08);opacity:0;animation:heroSlideUp 0.9s ease 1.1s forwards;flex-wrap:wrap}
+.hero-stats{display:flex;gap:2rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);opacity:0;animation:heroSlideUp 0.9s ease 1.1s forwards;flex-wrap:wrap}
 .hero-stat-num{font-family:'Fraunces',Georgia,serif;font-size:1.9rem;font-weight:700;color:var(--g);line-height:1;margin-bottom:0.25rem}
 .hero-stat-lbl{font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
 
@@ -1206,7 +1206,7 @@ img{content-visibility:auto}
     </div>
     <div class="about-stat">
       <span class="about-stat-icon">✍️</span>
-      <div><span class="about-stat-val">8 Articles</span><span class="about-stat-lbl">Published</span></div>
+      <div><span class="about-stat-val"><span id="aboutArticleCount">8</span> Articles</span><span class="about-stat-lbl">Published</span></div>
     </div>
     <div class="about-stat">
       <span class="about-stat-icon">📍</span>
