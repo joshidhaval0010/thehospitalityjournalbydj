@@ -2661,5 +2661,756 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 
 </script>
+<!--
+════════════════════════════════════════════════════════════════════
+  THE HOSPITALITY JOURNAL — TIER 1 EFFECTS PATCH
+  v1.1  (selectors verified against index.html)
+
+  HOW TO INSTALL
+  ──────────────
+  Open your index.html. Find the closing </body> tag at the very
+  bottom. Paste this entire block immediately before it. Save.
+  That is the only change you need to make.
+
+  WHAT IT DOES
+  ─────────────
+  1. Subtle 3D card tilt    — .fs-card and .ae-card tilt toward
+                              the cursor on hover (7° max, lerped).
+  2. Champagne-gold shimmer — a single soft highlight sweeps across
+                              each card on hover.
+  3. Scroll text reveals    — section labels, pull quotes, experience
+                              strip, and about-page body text fade up
+                              as they enter the viewport.
+
+  WHAT IT DOES NOT TOUCH
+  ───────────────────────
+  • Supabase / database logic
+  • Admin write panel (#page-write)
+  • Login overlay (#loginOverlay)
+  • Concierge panel (#conciergePanel)
+  • Post publish / image upload
+  • Subscriber / newsletter logic
+  • Documents / resources logic
+  • Any existing HTML structure, classes, or IDs
+  • The site's own heroSlideUp animations (.hero-* elements)
+
+  SAFE ON MOBILE
+  ──────────────
+  • Tilt is disabled on all touch devices (no mousemove events).
+  • Shimmer remains active (touch triggers :hover briefly).
+  • No layout change, no reflow, no font size change.
+
+  REDUCED MOTION
+  ──────────────
+  Respects prefers-reduced-motion. All transforms and transitions
+  are set to none; elements remain fully visible.
+
+════════════════════════════════════════════════════════════════════
+-->
+
+<!-- ────────────────────────────────────────────────────────────
+     TIER 1 STYLES
+──────────────────────────────────────────────────────────────── -->
+<style id="hj-tier1-styles">
+
+/* ── Reduced-motion kill-switch ──────────────────────────────
+   Any user who has opted into prefers-reduced-motion sees no
+   transforms, no fade-ins, and no transition delays. Elements
+   are shown at full opacity immediately.
+─────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hj-tilt-card,
+  .hj-tilt-card::after,
+  .hj-reveal,
+  .hj-reveal.hj-revealed {
+    animation:  none !important;
+    transition: none !important;
+    transform:  none !important;
+    opacity:    1    !important;
+  }
+}
+
+
+/* ── 3D CARD TILT — foundation ───────────────────────────────
+   Applied to .fs-card and .ae-card via JS.
+   overflow:hidden and position:relative are already set on both
+   card types in the existing CSS; these declarations are a no-op
+   safety net in case a dynamic variant lacks them.
+   will-change promotes the element to a GPU composite layer so
+   the rAF tilt loop never triggers a layout recalculation.
+─────────────────────────────────────────────────────────────── */
+.hj-tilt-card {
+  overflow:    hidden   !important;
+  position:    relative !important;
+  will-change: transform;
+}
+
+/*
+   .ae-card already declares:
+     .ae-card:hover { transform: translateY(-4px); ... }
+   We neutralise that here so the JavaScript lerp owns transform
+   entirely and the two never fight each other.
+   box-shadow and border-bottom-color still animate via CSS — only
+   the transform is transferred to JS control.
+*/
+.ae-card.hj-tilt-card:hover {
+  transform: none !important;
+}
+
+
+/* ── CHAMPAGNE-GOLD SHIMMER ──────────────────────────────────
+   A single diagonal highlight crosses the card face on hover.
+   Opacity is kept very low (13%) — a light reflection, not a
+   coloured flash. The sweep only runs on mouseenter, not on loop.
+   pointer-events:none ensures the pseudo-element never blocks
+   clicks, links, or touch events inside the card.
+─────────────────────────────────────────────────────────────── */
+.hj-tilt-card::after {
+  content:        '';
+  position:       absolute;
+  inset:          0;
+  background: linear-gradient(
+    112deg,
+    transparent              0%,
+    transparent             32%,
+    rgba(191, 160, 106, 0.13) 50%,   /* site's --g at 13% opacity */
+    transparent             68%,
+    transparent            100%
+  );
+  transform:      translateX(-115%);
+  pointer-events: none;
+  z-index:        10;       /* above card children; never covers input */
+  transition:     none;     /* only animate on :hover, not on exit     */
+}
+
+.hj-tilt-card:hover::after {
+  transform:  translateX(115%);
+  transition: transform 0.74s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ── MOBILE — tilt off, shimmer on ──────────────────────────
+   Touch devices have no persistent hover / mousemove events.
+   Removing will-change saves memory on low-end phones.
+   The ::after shimmer still fires on tap (tap briefly sets :hover).
+─────────────────────────────────────────────────────────────── */
+@media (hover: none), (max-width: 767px) {
+  .hj-tilt-card {
+    will-change: auto;
+  }
+}
+
+
+/* ── SCROLL TEXT REVEAL ──────────────────────────────────────
+   Elements start at opacity 0 and 14px below their resting place.
+   .hj-revealed is added by the IntersectionObserver when the
+   element enters the viewport at the configured threshold.
+   will-change: opacity, transform keeps animation on the GPU.
+─────────────────────────────────────────────────────────────── */
+.hj-reveal {
+  opacity:    0;
+  transform:  translateY(14px);
+  transition:
+    opacity   0.68s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.68s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.hj-reveal.hj-revealed {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+/*
+   Stagger consecutive siblings — gives editorial rhythm to
+   grouped elements (experience strip, stats, paragraphs) without
+   any JS text-splitting.
+*/
+.hj-reveal + .hj-reveal               { transition-delay: 0.09s; }
+.hj-reveal + .hj-reveal + .hj-reveal  { transition-delay: 0.18s; }
+
+</style>
+
+
+<!-- ────────────────────────────────────────────────────────────
+     TIER 1 SCRIPT
+──────────────────────────────────────────────────────────────── -->
+<script id="hj-tier1-script">
+(function () {
+  'use strict';
+
+  /* ── Environment ───────────────────────────────────────────── */
+  var REDUCED  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  /* ── Tilt parameters ───────────────────────────────────────── */
+  var T = {
+    maxDeg:  7,    /* max rotation in any direction — editorial, not dramatic */
+    liftZ:  10,    /* Z-axis lift on hover (px)                               */
+    lerp:  0.10,   /* interpolation factor — lower is silkier                 */
+    persp: 900     /* perspective distance (px) — larger = shallower depth    */
+  };
+
+  /* ── Card selectors ────────────────────────────────────────────
+     .fs-card  — Featured Stories grid (fs-lead, fs-stack-a/b, fs-strip-a/b)
+                 Rendered by renderCarousel() into #featuredGrid
+     .ae-card  — Bento / All Entries grid
+                 Rendered by renderBento() into the ae-grid container
+
+     Both already have: position:relative; overflow:hidden; cursor:pointer
+     in the existing site CSS.
+  ─────────────────────────────────────────────────────────────── */
+  var CARD_SEL = '.fs-card, .ae-card';
+
+  /* ── Reveal selectors ──────────────────────────────────────────
+     Deliberately narrow — structural editorial elements only.
+
+     EXCLUDED intentionally:
+       • All .hero-* elements  — already animated by heroSlideUp keyframes
+       • .ab-eyebrow / .ab-name / .ab-subtitle  — about-page hero; above
+         the fold on page open, should appear instantly
+       • Anything inside the admin/write/concierge zones (SAFE below)
+  ─────────────────────────────────────────────────────────────── */
+  var REVEAL_SEL = [
+    /* Home — below-fold section markers */
+    '.section-tag',
+    '.pq-banner blockquote',
+    '.pq-banner cite',
+    /* Home — experience strip (4 items stagger via CSS sibling rule) */
+    '.exp-title',
+    '.exp-desc',
+    /* About page — stats bar */
+    '#page-about .ab-stat',
+    /* About page — body content (all below fold) */
+    '#page-about .ab-section-label',
+    '#page-about .ab-story-title',
+    '#page-about .ab-pq',
+    '#page-about .ab-main > p'
+  ].join(', ');
+
+  /* ── Safe zones — effects are never applied inside these ───────
+     #page-write    = write / admin editor panel
+     #loginOverlay  = login modal
+     #conciergePanel = AI concierge widget
+     form           = any form element
+     [contenteditable] = rich-text editor fields
+  ─────────────────────────────────────────────────────────────── */
+  var SAFE = '#page-write, #loginOverlay, #conciergePanel, form, [contenteditable]';
+
+
+  /* ══════════════════════════════════════════════════════════════
+     1.  3 D   C A R D   T I L T
+  ══════════════════════════════════════════════════════════════ */
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function initTilt(card) {
+    if (card._hjTilt)       return;   /* already processed — idempotent */
+    if (card.closest(SAFE)) return;   /* never inside admin zones       */
+    card._hjTilt = true;
+
+    /* Activates CSS rules: overflow:hidden, shimmer ::after, hover override */
+    card.classList.add('hj-tilt-card');
+
+    /* Touch or reduced-motion: shimmer-only, no mouse tracking */
+    if (IS_TOUCH || REDUCED) return;
+
+    var tRx = 0, tRy = 0, tZ = 0;   /* rotation / lift targets  */
+    var cRx = 0, cRy = 0, cZ = 0;   /* current (lerped) values  */
+    var rafId   = null;
+    var hovered = false;
+
+    function tick() {
+      cRx = lerp(cRx, tRx, T.lerp);
+      cRy = lerp(cRy, tRy, T.lerp);
+      cZ  = lerp(cZ,  tZ,  T.lerp);
+
+      card.style.transform =
+        'perspective('   + T.persp           + 'px) '  +
+        'rotateX('       + cRx.toFixed(3)    + 'deg) ' +
+        'rotateY('       + cRy.toFixed(3)    + 'deg) ' +
+        'translateZ('    + cZ.toFixed(2)     + 'px)';
+
+      /* Stop the loop once values are near zero and mouse has left */
+      if (!hovered &&
+          Math.abs(cRx) < 0.04 &&
+          Math.abs(cRy) < 0.04 &&
+          Math.abs(cZ)  < 0.08) {
+        card.style.transform  = '';
+        card.style.transition = '';   /* restore site's CSS transition */
+        rafId = null;
+        return;
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    card.addEventListener('mouseenter', function () {
+      hovered = true;
+      tZ = T.liftZ;
+      /*
+        Disable the site's CSS 'transition: transform 0.28s ease' on .ae-card
+        while JS is driving the transform. We preserve the box-shadow and
+        border-bottom-color transitions so the depth shadow and gold border
+        still ease in through CSS — only transform is handed to JS.
+      */
+      card.style.transition = 'box-shadow 0.28s ease, border-bottom-color 0.28s ease';
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    });
+
+    card.addEventListener('mousemove', function (e) {
+      var r  = card.getBoundingClientRect();
+      var nx = (e.clientX - r.left) / r.width  - 0.5;  /* −0.5 → +0.5 */
+      var ny = (e.clientY - r.top)  / r.height - 0.5;
+      tRy =  nx * T.maxDeg;   /* cursor right  → card tilts right  */
+      tRx = -ny * T.maxDeg;   /* cursor down   → card tilts back   */
+    });
+
+    card.addEventListener('mouseleave', function () {
+      hovered = false;
+      tRx = 0; tRy = 0; tZ = 0;
+      /* JS lerp settles back to zero; tick() restores transition on exit */
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    });
+  }
+
+  function applyTiltToAll() {
+    document.querySelectorAll(CARD_SEL).forEach(initTilt);
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     2.  S C R O L L   T E X T   R E V E A L
+  ══════════════════════════════════════════════════════════════ */
+
+  var io = null;   /* IntersectionObserver — one shared instance */
+
+  function initReveal() {
+    if (REDUCED) return;
+
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('hj-revealed');
+          io.unobserve(e.target);            /* fire once, then stop watching */
+        }
+      });
+    }, {
+      threshold:  0.18,           /* trigger when 18% of element is visible */
+      rootMargin: '0px 0px -28px 0px'  /* slight early-entry offset         */
+    });
+
+    applyRevealToAll();
+  }
+
+  function applyRevealToAll() {
+    if (REDUCED) return;
+    document.querySelectorAll(REVEAL_SEL).forEach(markReveal);
+  }
+
+  function markReveal(el) {
+    if (el._hjReveal)       return;
+    if (el.closest(SAFE))   return;
+    el._hjReveal = true;
+
+    /*
+      getBoundingClientRect() returns zeros for elements inside
+      display:none page divs — that is expected. Those elements
+      are added to the observer; they will be revealed when their
+      parent page becomes visible and the browser resolves their
+      intersection with the viewport.
+
+      For elements that are genuinely in the viewport at page load
+      (rect.bottom > 0 already visible), we skip the transition to
+      avoid any flash-of-unstyled-content on first render.
+    */
+    var rect = el.getBoundingClientRect();
+    if (rect.bottom > 0 && rect.top < window.innerHeight * 0.92) {
+      return;   /* already visible — show immediately, no animation */
+    }
+
+    el.classList.add('hj-reveal');
+    if (io) io.observe(el);
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     M U T A T I O N   O B S E R V E R
+     ─────────────────────────────────
+     Listens for new child nodes inserted into the DOM.
+     Catches cards injected by renderBento() and renderCarousel()
+     after the Supabase fetch resolves, and re-runs reveal marking
+     when static page content becomes reachable.
+
+     We gate on addedNodes.length > 0 so attribute mutations
+     (e.g. class toggles on the .page divs) do not trigger
+     unnecessary querySelectorAll calls.
+  ══════════════════════════════════════════════════════════════ */
+
+  new MutationObserver(function (mutations) {
+    var hasAdded = false;
+    for (var i = 0; i < mutations.length; i++) {
+      if (mutations[i].addedNodes.length > 0) { hasAdded = true; break; }
+    }
+    if (!hasAdded) return;
+    applyTiltToAll();
+    applyRevealToAll();
+  }).observe(document.body, { childList: true, subtree: true });
+
+
+  /* ══════════════════════════════════════════════════════════════
+     I N I T
+  ══════════════════════════════════════════════════════════════ */
+
+  function init() {
+    applyTiltToAll();
+    initReveal();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}());
+</script>
+
+<!--
+════════════════════════════════════════════════════════════════════
+  THE HOSPITALITY JOURNAL — TIER 2 EFFECTS PATCH  v3.0
+  (requires Tier 1 already installed)
+
+  ROOT FIX IN v3.0
+  ─────────────────
+  backdrop-filter applied directly to position:fixed causes a known
+  Chrome/Safari pointer-event bug — the nav visually renders but
+  clicks pass through or are blocked on children. Fixed by moving
+  the entire glass effect to a ::before pseudo-element that carries
+  pointer-events:none. The nav element itself stays clean and all
+  its children (links, buttons, social icons) are always clickable.
+
+  WHAT IT ADDS
+  ─────────────
+  1. Floating glass navbar   — ::before carries the frosted glass.
+                               Nav children have explicit z-index:1
+                               and pointer-events:auto so they can
+                               never be blocked.
+  2. Hero mouse parallax     — bg/left/right drift at different depths.
+  3. Cinematic page trans    — scale-up (0.993→1) + refined fade.
+  4. Pull-quote depth        — quote text floats gently on scroll.
+════════════════════════════════════════════════════════════════════
+-->
+
+<style id="hj-tier2-styles">
+
+/* ── Reduced-motion kill-switch ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #mainNav::before,
+  .hero-bg, .hero-left, .hero-right,
+  .hj-pq-inner {
+    transition: none !important;
+    transform:  none !important;
+    animation:  none !important;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   1.  F L O A T I N G   G L A S S   N A V B A R
+   ─────────────────────────────────────────────
+   Architecture:
+     #mainNav        — position:fixed shell. Background transparent.
+                        isolation:isolate creates a proper stacking
+                        context for z-index ordering below.
+     #mainNav::before — the glass layer. backdrop-filter + background
+                        + shadow all live here. pointer-events:none
+                        means it NEVER intercepts clicks.
+     .nav-logo-img,
+     .nav-links       — z-index:1 puts them above ::before so they
+                        are always in the hit-test region.
+
+   This architecture avoids the Chrome/Safari bug where backdrop-
+   filter on position:fixed breaks pointer-events on child elements.
+══════════════════════════════════════════════════════════════ */
+
+/* Strip the solid bg from the nav shell — ::before owns visuals */
+#mainNav.dark,
+#mainNav.light {
+  background:  transparent !important;
+  border-bottom: none !important;
+  box-shadow:  none !important;
+  isolation:   isolate;
+}
+
+/* The glass layer — never blocks clicks */
+#mainNav::before {
+  content:          '';
+  position:         absolute;
+  inset:            0;
+  pointer-events:   none;           /* CRITICAL — never blocks nav clicks */
+  z-index:          0;
+  transition:
+    background          0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow          0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    border-bottom-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark nav glass (home / stories / post) */
+#mainNav.dark::before {
+  background:              rgba(13, 11, 8, 0.78);
+  backdrop-filter:         blur(28px) saturate(1.3);
+  -webkit-backdrop-filter: blur(28px) saturate(1.3);
+  border-bottom:           1px solid rgba(191, 160, 106, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 4px  12px rgba(0, 0, 0, 0.22),
+    0 16px 48px rgba(0, 0, 0, 0.34);
+}
+
+/* Dark nav — deepens on scroll */
+#mainNav.dark.hj-nav-scrolled::before {
+  background:    rgba(13, 11, 8, 0.94);
+  border-bottom: 1px solid rgba(191, 160, 106, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 4px  12px rgba(0, 0, 0, 0.30),
+    0 20px 60px rgba(0, 0, 0, 0.50);
+}
+
+/* Light nav glass (About page) */
+#mainNav.light::before {
+  background:              rgba(249, 246, 240, 0.90);
+  backdrop-filter:         blur(28px) saturate(1.2);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  border-bottom:           1px solid rgba(26, 24, 20, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 4px  12px rgba(0, 0, 0, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.10);
+}
+
+/*
+  Nav content — sits ABOVE the glass layer.
+  pointer-events:auto is explicit so no browser quirk can suppress it.
+*/
+#mainNav .nav-logo-img,
+#mainNav .nav-links {
+  position:       relative;
+  z-index:        1;
+  pointer-events: auto;
+}
+
+#mainNav .nav-links a,
+#mainNav .nav-links button {
+  pointer-events: auto;
+}
+
+/* Legibility on dark glass: lift link opacity from 0.5 → 0.82 */
+#mainNav.dark .nav-links a {
+  color: rgba(249, 246, 240, 0.82) !important;
+}
+#mainNav.dark .nav-links a:hover {
+  color: #BFA06A !important;
+}
+
+/* Social icon ring visibility */
+#mainNav.dark .nav-links li a[href*="linkedin"],
+#mainNav.dark .nav-links li a[href*="mailto"] {
+  border-color: rgba(191, 160, 106, 0.50) !important;
+  color:        rgba(249, 246, 240, 0.70) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   2.  C I N E M A T I C   P A G E   T R A N S I T I O N
+══════════════════════════════════════════════════════════════ */
+
+@keyframes pageFadeIn {
+  from {
+    opacity:   0;
+    transform: translateY(18px) scale(0.993);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0)    scale(1);
+  }
+}
+
+.page {
+  animation-duration:        0.65s !important;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   3.  H E R O   P A R A L L A X   ( will-change via JS only )
+   JS sets will-change inline when the mouse enters the hero,
+   and clears it on settle — no persistent will-change in CSS.
+══════════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════════════════════════════════
+   4.  P U L L - Q U O T E   P A R A L L A X
+══════════════════════════════════════════════════════════════ */
+
+.hj-pq-inner {
+  display: block;
+}
+
+</style>
+
+
+<script id="hj-tier2-script">
+(function () {
+  'use strict';
+
+  var REDUCED  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+
+  /* ══════════════════════════════════════════════════════════════
+     1.  N A V B A R   S C R O L L   D E P T H
+  ══════════════════════════════════════════════════════════════ */
+
+  function updateNavScroll() {
+    var nav = document.getElementById('mainNav');
+    if (!nav) return;
+    if (window.scrollY > 60) {
+      nav.classList.add('hj-nav-scrolled');
+    } else {
+      nav.classList.remove('hj-nav-scrolled');
+    }
+  }
+
+  window.addEventListener('scroll', updateNavScroll, { passive: true });
+
+  /* Re-evaluate after showPage() swaps dark ↔ light class */
+  function watchNavClass() {
+    var nav = document.getElementById('mainNav');
+    if (!nav) return;
+    new MutationObserver(updateNavScroll)
+      .observe(nav, { attributes: true, attributeFilter: ['class'] });
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     2.  H E R O   M O U S E   P A R A L L A X
+     Layers: .hero-bg ±11px, .hero-left ±5px, .hero-right ±3px
+  ══════════════════════════════════════════════════════════════ */
+
+  var P_LAYERS = [
+    { sel: '.hero-bg',    depth: 11 },
+    { sel: '.hero-left',  depth:  5 },
+    { sel: '.hero-right', depth:  3 }
+  ];
+  var LF = 0.055;   /* lerp factor */
+
+  function initHeroParallax() {
+    if (IS_TOUCH || REDUCED) return;
+
+    var hero = document.getElementById('heroSection');
+    if (!hero) return;
+
+    var layers = P_LAYERS.map(function (cfg) {
+      return {
+        el: hero.querySelector(cfg.sel), depth: cfg.depth,
+        tx: 0, ty: 0, cx: 0, cy: 0
+      };
+    }).filter(function (l) { return !!l.el; });
+
+    if (!layers.length) return;
+
+    var rafId = null, active = false;
+
+    function tick() {
+      var done = true;
+      layers.forEach(function (l) {
+        l.cx += (l.tx - l.cx) * LF;
+        l.cy += (l.ty - l.cy) * LF;
+        l.el.style.transform =
+          'translate3d(' + l.cx.toFixed(2) + 'px,' + l.cy.toFixed(2) + 'px,0)';
+        if (Math.abs(l.tx - l.cx) > 0.08 || Math.abs(l.ty - l.cy) > 0.08) done = false;
+      });
+      if (done && !active) {
+        layers.forEach(function (l) {
+          l.el.style.transform = '';
+          l.el.style.willChange = '';
+        });
+        rafId = null; return;
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    hero.addEventListener('mousemove', function (e) {
+      var r = hero.getBoundingClientRect();
+      var nx = (e.clientX - r.left) / r.width  - 0.5;
+      var ny = (e.clientY - r.top)  / r.height - 0.5;
+      layers.forEach(function (l) { l.tx = nx * l.depth; l.ty = ny * l.depth; });
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    });
+
+    hero.addEventListener('mouseenter', function () {
+      active = true;
+      /* Set will-change only while actively animating */
+      layers.forEach(function (l) { l.el.style.willChange = 'transform'; });
+    });
+
+    hero.addEventListener('mouseleave', function () {
+      active = false;
+      layers.forEach(function (l) { l.tx = 0; l.ty = 0; });
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    });
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     3.  P U L L - Q U O T E   P A R A L L A X
+  ══════════════════════════════════════════════════════════════ */
+
+  function initPQParallax() {
+    if (IS_TOUCH || REDUCED) return;
+
+    var banner = document.querySelector('.pq-banner');
+    if (!banner) return;
+
+    var inner = banner.querySelector('.hj-pq-inner');
+    if (!inner) {
+      inner = document.createElement('div');
+      inner.className = 'hj-pq-inner';
+      while (banner.firstChild) inner.appendChild(banner.firstChild);
+      banner.appendChild(inner);
+    }
+
+    var MAX = 18;
+    function onScroll() {
+      var r     = banner.getBoundingClientRect();
+      var ratio = Math.max(-1, Math.min(1, (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight / 2)));
+      inner.style.transform = 'translateY(' + (ratio * MAX).toFixed(2) + 'px)';
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     I N I T
+  ══════════════════════════════════════════════════════════════ */
+
+  function init() {
+    updateNavScroll();
+    watchNavClass();
+    initHeroParallax();
+    initPQParallax();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}());
+</script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 </body>
 </html>
