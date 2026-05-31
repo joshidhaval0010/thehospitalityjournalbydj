@@ -748,7 +748,7 @@ nav.light #lockBtn{background:var(--border);color:var(--fog)}
 <!-- ══════════════════════════════════════════
      PAGE: HOME
 ══════════════════════════════════════════ -->
-<div class="page active" id="page-home">
+<div class="page active" id="page-home" style="display:block">
 
   <!-- HERO -->
   <section class="hero" id="heroSection">
@@ -1618,9 +1618,8 @@ function goPost(idx){
   document.getElementById('postHeroTag').textContent=p.category||'';
   document.getElementById('postHeroTitle').textContent=p.title||'';
   document.getElementById('postHeroMeta').textContent=[date,readTime(p.body)+' min read'].filter(Boolean).join(' · ');
-  console.log('Post fields available:', Object.keys(p)); console.log('body value:', p.body ? p.body.substring(0,100) : 'NULL');
   const bodyContent = p.body || p.content || p.body_html || p.article || '';
-  document.getElementById('postBody').innerHTML = bodyContent || '<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;color:var(--fog);text-align:center;padding:3rem">Content coming soon.</p>';
+  document.getElementById('postBody').innerHTML = bodyContent || '<p>Content coming soon.</p>';
   showPage('page-post');
   // read progress
   const prog=document.getElementById('readProg');
