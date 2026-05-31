@@ -1618,7 +1618,9 @@ function goPost(idx){
   document.getElementById('postHeroTag').textContent=p.category||'';
   document.getElementById('postHeroTitle').textContent=p.title||'';
   document.getElementById('postHeroMeta').textContent=[date,readTime(p.body)+' min read'].filter(Boolean).join(' · ');
-  document.getElementById('postBody').innerHTML=p.body||'<p>No content yet.</p>';
+  console.log('Post fields available:', Object.keys(p)); console.log('body value:', p.body ? p.body.substring(0,100) : 'NULL');
+  const bodyContent = p.body || p.content || p.body_html || p.article || '';
+  document.getElementById('postBody').innerHTML = bodyContent || '<p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;color:var(--fog);text-align:center;padding:3rem">Content coming soon.</p>';
   showPage('page-post');
   // read progress
   const prog=document.getElementById('readProg');
@@ -1671,41 +1673,36 @@ function searchDocs(q){
 }
 async function viewDoc(id){
   const doc=docsCache.find(d=>d.id===id);if(!doc)return;
-  // URL never exposed in DOM — fetched in memory only
   const url=`https://jjkpfkwsminxzvgykjwy.supabase.co/storage/v1/object/public/documents/${doc.storage_path||doc.id}`;
   document.getElementById('docViewerTitle').textContent=doc.name||'Document';
   const frame=document.getElementById('docViewerFrame');
   frame.innerHTML='<p style="color:rgba(255,255,255,.4);font-size:.85rem;text-align:center;padding:3rem">Loading…</p>';
   document.getElementById('docViewer').classList.add('open');
-  // Block right-click and keyboard save/print inside viewer
+  // Block right-click inside viewer
   frame.oncontextmenu=e=>e.preventDefault();
   try{
     if(typeof pdfjsLib!=='undefined'){
       pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      // Fetch as blob so URL is never in DOM
-      const resp=await fetch(url);
-      const blob=await resp.blob();
-      const blobUrl=URL.createObjectURL(blob);
-      const pdf=await pdfjsLib.getDocument(blobUrl).promise;
+      const pdf=await pdfjsLib.getDocument(url).promise;
       frame.innerHTML='';
       for(let i=1;i<=pdf.numPages;i++){
         const page=await pdf.getPage(i);
         const vp=page.getViewport({scale:1.5});
         const canvas=document.createElement('canvas');
         canvas.width=vp.width;canvas.height=vp.height;
-        // Disable right-click on each canvas
+        // Canvas = no right-click save, no download button
         canvas.oncontextmenu=e=>e.preventDefault();
         canvas.style.cssText='max-width:100%;display:block;box-shadow:0 4px 30px rgba(0,0,0,.5);margin-bottom:1rem;user-select:none;-webkit-user-select:none;pointer-events:none';
         const ctx=canvas.getContext('2d');
         await page.render({canvasContext:ctx,viewport:vp}).promise;
         frame.appendChild(canvas);
       }
-      URL.revokeObjectURL(blobUrl);
     } else {
       frame.innerHTML='<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Unable to display this document in your browser.</p>';
     }
   }catch(e){
     frame.innerHTML='<p style="color:rgba(255,255,255,.5);text-align:center;padding:3rem">Unable to load document. Please try again.</p>';
+    console.error('PDF load error:',e);
   }
 }
 function closeDocViewer(){document.getElementById('docViewer').classList.remove('open');document.getElementById('docViewerFrame').innerHTML=''}
